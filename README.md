@@ -4,15 +4,36 @@
 ...
 
 ### Eclipse
-Entre no eclipse e no canto superior esquerdo clica em Help, depois em Install New Software
+Entre no eclipse e clique em Import Projects, depois General e escolha a opção Existing Projects into Workspace
+<img src="/Tutorial/4.png">
 
-Na tela seguinte você clica em Add e coloca WindowBuilder1.19.0Release Latest no nome, na Url você coloca https://download.eclipse.org/windowbuilder/updates/release/latest
+Depois na opção select root directory clique em Browse, escolha a pasta que você quer trazer e clique em Finish
+<img src="/Tutorial/5.png">
 
-Depois clica em Add em baixo e quando você voltar o WindowBuilder já vai aparecer, marca a check box clica em Next até ele começar a baixar
+Pronto você importou o projeto. Agora no canto superior esquerdo clica em Help, depois em Install New Software
+<img src="/Tutorial/1.png">
 
-Feito isso, tem que criar o caminho pro JDBC. Clica em New, depois em Configure Build Path. Vá em Libraries e provavelmente já vai ter o JDBC no ClassPath, se tiver apague ele selecionando ele e clicando em Remove. Depois clique em Add External JARs e cloque o arquivo JDBC. Depois clique em Apply and Close
+Na tela seguinte você clica em Add e coloca WindowBuilder1.19.0Release Latest no nome, na Url você coloca https://download.eclipse.org/windowbuilder/updates/release/latest e depois clique em Add
+<img src="/Tutorial/2.png">
+
+Quando você voltar o WindowBuilder já vai aparecer, marca a check box clica em Next até ele começar a baixar e vai dando Next e permissão até ele começar a baixar
+<img src="/Tutorial/3.png">
+
+Feito isso, tem que criar o caminho pro JDBC. Clique com o botão esquerdo na workspace depois em Build Path, depois em Configure Build Path. 
+
+<img src="/Tutorial/6.png">
+
+Vá em Libraries e provavelmente já vai ter o JDBC no ClassPath, se tiver apague ele selecionando ele e clicando em Remove. 
+
+<img src="/Tutorial/7.png">
+
+Depois selecione o ModulePath, clique em Add External JARs e coloque o arquivo JDBC. Depois clique em Apply and Close
+
+<img src="/Tutorial/8.png">
 
 Com isso o Eclipse já deve estar configurado
 
 PS: Se acontecer da parte de Source e Design não aparecerem clica com o botão direito no arquivo, vá em Open With e escolha a opção WindowBuilder Editor
+
+<img src="/Tutorial/9.png">
 
