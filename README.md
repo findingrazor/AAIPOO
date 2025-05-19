@@ -1,7 +1,27 @@
 ## Suporte
 
 ### Git 
-...
+Links dos vídeos pra aprender a mexer:
+Como baixar Git e subir o primeiro repositório pro GitHub: https://youtu.be/lv5a80XgzlI?si=QfxmnZwXFFbzGZtx
+Como usar Git e GitHub: https://youtu.be/UBAX-13g8OM?si=XitH7MRuWLdPCmwa
+
+Comandos básicos: 
+//Criar repositório
+git init 
+git add . 
+git commit -m "primeiro commit"
+git branch -M main 
+git remote add origin (junto com o link do repositório) 
+git push -u origin main 
+
+//Alterar e Adição
+cd "caminho da sua pasta onde vai ficar o projeto"
+git clone "link do repositorio"
+--abre o repositorio clonado no vscode
+git add . (ou caminho do arquivo se for uma alteração)
+git commit -m "alteração"
+git push
+
 
 ### Eclipse
 Entre no eclipse e clique em Import Projects, depois General e escolha a opção Existing Projects into Workspace
