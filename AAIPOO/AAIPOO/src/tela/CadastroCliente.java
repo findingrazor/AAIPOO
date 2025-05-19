@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTextField;
@@ -71,7 +73,7 @@ public class CadastroCliente {
 		lblCPF.setBounds(228, 369, 48, 31);
 		frame.getContentPane().add(lblCPF);
 		
-		JLabel lblEmail = new JLabel("email");
+		JLabel lblEmail = new JLabel("E-mail");
 		lblEmail.setForeground(Color.WHITE);
 		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		lblEmail.setBounds(213, 482, 62, 31);
@@ -100,30 +102,32 @@ public class CadastroCliente {
 		textFieldCPF.setColumns(10);
 		textFieldCPF.setBounds(286, 358, 292, 42);
 		frame.getContentPane().add(textFieldCPF);
-		//validar
 		
 		textFieldEmail = new JTextField();
 		textFieldEmail.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		textFieldEmail.setColumns(10);
 		textFieldEmail.setBounds(286, 477, 455, 42);
 		frame.getContentPane().add(textFieldEmail);
-		//validar
 		
 		textFieldEndereço = new JTextField();
 		textFieldEndereço.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		textFieldEndereço.setColumns(10);
 		textFieldEndereço.setBounds(286, 715, 455, 42);
 		frame.getContentPane().add(textFieldEndereço);
-		//validar
 		
 		textFieldTelefone = new JTextField();
 		textFieldTelefone.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		textFieldTelefone.setColumns(10);
 		textFieldTelefone.setBounds(286, 596, 292, 42);
 		frame.getContentPane().add(textFieldTelefone);
-		//validar
 		
 		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				naoVazio();
+				validar();
+			}
+		});
 		btnSalvar.setForeground(new Color(63, 75, 85));
 		btnSalvar.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnSalvar.setBounds(655, 874, 214, 67);
@@ -132,14 +136,13 @@ public class CadastroCliente {
 		JButton btnLimpar = new JButton("Limpar");
 		btnLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				limpar();
 			}
 		});
 		btnLimpar.setForeground(new Color(63, 75, 85));
 		btnLimpar.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnLimpar.setBounds(948, 874, 214, 67);
-		frame.getContentPane().add(btnLimpar);
-		//limpar 
+		frame.getContentPane().add(btnLimpar); 
 		
 		JButton btnDeletar = new JButton("Deletar");
 		btnDeletar.setForeground(new Color(63, 75, 85));
@@ -148,13 +151,49 @@ public class CadastroCliente {
 		frame.getContentPane().add(btnDeletar);
 		
 		JButton btnAtualizar = new JButton("Atualizar");
-		btnAtualizar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		btnAtualizar.setForeground(new Color(63, 75, 85));
 		btnAtualizar.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnAtualizar.setBounds(1534, 874, 214, 67);
 		frame.getContentPane().add(btnAtualizar);
+				
+	}
+	
+	public void limpar() {
+		textFieldNome.setText("");
+		textFieldCPF.setText("");
+		textFieldEmail.setText("");
+		textFieldEndereço.setText("");
+		textFieldTelefone.setText("");
+	}
+	
+	public void naoVazio() {
+		JTextField [] campos = {textFieldNome, textFieldCPF, textFieldEmail, textFieldEndereço, textFieldTelefone};
+		String[] nomesCampos = {"Nome", "CPF", "E-mail", "Endereço", "Telefone"};
+		for(int i=0; i < campos.length; i++) {
+			if(campos[i].getText().isBlank()) {
+				JOptionPane.showMessageDialog(null, "O campo " + nomesCampos[i] + " está vazio, por favor, preencha-o");
+			}
+		}
+	}
+	
+	public void validar() {
+		JTextField [] campos = {textFieldNome, textFieldCPF, textFieldEmail, textFieldEndereço, textFieldTelefone};
+			
+			if(!campos[1].getText().matches("\\d+")) {
+				JOptionPane.showMessageDialog(null, "CPF inválido, por favor digite apenas números");
+			} else if (campos[1].getText().length()!=11) {
+				JOptionPane.showMessageDialog(null, "CPF inválido, por favor digite um número válido (11 caracteres)");
+			} 
+			
+			if(!campos[2].getText().contains("@") || !campos[0].getText().contains(".com")) {
+				JOptionPane.showMessageDialog(null, "Email inválido, por favor digite um email com pelo menos @ e .com");
+			} 
+			
+			if(!campos[4].getText().matches("\\d+")) {
+				JOptionPane.showMessageDialog(null, "Telefone inválido, por favor digite apenas números");
+			} else if (campos[4].getText().length()!=11) {
+				JOptionPane.showMessageDialog(null, "Telefone inválido, por favor digite um número válido (11 caracteres)");
+			}
+				
 	}
 }
