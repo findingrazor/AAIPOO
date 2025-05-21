@@ -1,27 +1,32 @@
 package view;
-
+ 
 import java.awt.EventQueue;
-
+ 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
+ 
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTextField;
+ 
+import controller.ClienteController;
+ 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+ 
 public class TelaCliente {
-
+ 
 	private JFrame frame;
 	private JTextField textFieldNome;
 	private JTextField textFieldCPF;
 	private JTextField textFieldEmail;
 	private JTextField textFieldEndereço;
 	private JTextField textFieldTelefone;
-
+	
+	private ClienteController controller = new ClienteController();
+ 
 	/**
 	 * Launch the application.
 	 */
@@ -37,14 +42,14 @@ public class TelaCliente {
 			}
 		});
 	}
-
+ 
 	/**
 	 * Create the application.
 	 */
 	public TelaCliente() {
 		initialize();
 	}
-
+ 
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -124,8 +129,9 @@ public class TelaCliente {
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				naoVazio();
-				validar();
+				if(naoVazio()==true && validar()==true) {
+					salvar();
+				}
 			}
 		});
 		btnSalvar.setForeground(new Color(63, 75, 85));
@@ -142,7 +148,7 @@ public class TelaCliente {
 		btnLimpar.setForeground(new Color(63, 75, 85));
 		btnLimpar.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnLimpar.setBounds(948, 874, 214, 67);
-		frame.getContentPane().add(btnLimpar); 
+		frame.getContentPane().add(btnLimpar);
 		
 		JButton btnDeletar = new JButton("Deletar");
 		btnDeletar.setForeground(new Color(63, 75, 85));
@@ -158,6 +164,15 @@ public class TelaCliente {
 				
 	}
 	
+	private void salvar() {
+		controller.salvar(textFieldNome.getText(),
+				textFieldCPF.getText(),
+				textFieldEmail.getText(),
+				textFieldTelefone.getText(),
+				textFieldEndereço.getText());
+		
+	}
+	
 	public void limpar() {
 		textFieldNome.setText("");
 		textFieldCPF.setText("");
@@ -166,34 +181,42 @@ public class TelaCliente {
 		textFieldTelefone.setText("");
 	}
 	
-	public void naoVazio() {
+	public boolean naoVazio() {
 		JTextField [] campos = {textFieldNome, textFieldCPF, textFieldEmail, textFieldEndereço, textFieldTelefone};
 		String[] nomesCampos = {"Nome", "CPF", "E-mail", "Endereço", "Telefone"};
 		for(int i=0; i < campos.length; i++) {
 			if(campos[i].getText().isBlank()) {
 				JOptionPane.showMessageDialog(null, "O campo " + nomesCampos[i] + " está vazio, por favor, preencha-o");
+				return false;
 			}
 		}
+		return true;
 	}
 	
-	public void validar() {
+	public boolean validar() {
 		JTextField [] campos = {textFieldNome, textFieldCPF, textFieldEmail, textFieldEndereço, textFieldTelefone};
 			
 			if(!campos[1].getText().matches("\\d+")) {
 				JOptionPane.showMessageDialog(null, "CPF inválido, por favor digite apenas números");
+				return false;
 			} else if (campos[1].getText().length()!=11) {
 				JOptionPane.showMessageDialog(null, "CPF inválido, por favor digite um número válido (11 caracteres)");
-			} 
+				return false;
+			}
 			
-			if(!campos[2].getText().contains("@") || !campos[0].getText().contains(".com")) {
+			if(!campos[2].getText().contains("@") || !campos[2].getText().contains(".com")) {
 				JOptionPane.showMessageDialog(null, "Email inválido, por favor digite um email com pelo menos @ e .com");
-			} 
+				return false;
+			}
 			
 			if(!campos[4].getText().matches("\\d+")) {
 				JOptionPane.showMessageDialog(null, "Telefone inválido, por favor digite apenas números");
+				return false;
 			} else if (campos[4].getText().length()!=11) {
 				JOptionPane.showMessageDialog(null, "Telefone inválido, por favor digite um número válido (11 caracteres)");
+				return false;
 			}
 				
+			return true;
 	}
 }
