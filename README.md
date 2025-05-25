@@ -1,7 +1,7 @@
 ## Suporte
 
 ### Git 
-Links dos vídeos pra aprender a mexer:
+Links dos vídeos pra aprender a mexer:<br>
 Como baixar Git e subir o primeiro repositório pro GitHub: https://youtu.be/lv5a80XgzlI?si=QfxmnZwXFFbzGZtx
 
 Como usar Git e GitHub: https://youtu.be/UBAX-13g8OM?si=XitH7MRuWLdPCmwa
