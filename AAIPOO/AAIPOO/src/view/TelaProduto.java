@@ -55,6 +55,7 @@ public class TelaProduto {
 		frame.setBounds(0, 0, 700, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 		
 		textFieldProduto = new JTextField();
 		textFieldProduto.setBounds(30, 156, 416, 31);
