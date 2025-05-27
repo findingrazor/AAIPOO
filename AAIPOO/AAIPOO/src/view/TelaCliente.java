@@ -59,6 +59,7 @@ public class TelaCliente {
 		frame.setBounds(0, 0, 700, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 		
 		JLabel lblTitulo = new JLabel("Cadastro Cliente");
 		lblTitulo.setForeground(Color.WHITE);
