@@ -152,16 +152,32 @@ public class TelaCliente {
 		frame.getContentPane().add(btnLimpar); 
 		
 		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deletar();
+			}
+		});
 		btnDeletar.setForeground(new Color(63, 75, 85));
 		btnDeletar.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnDeletar.setBounds(352, 598, 132, 40);
 		frame.getContentPane().add(btnDeletar);
 		
 		JButton btnAtualizar = new JButton("Atualizar");	
+		btnAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		btnAtualizar.setForeground(new Color(63, 75, 85));
 		btnAtualizar.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		btnAtualizar.setBounds(505, 598, 132, 40);
 		frame.getContentPane().add(btnAtualizar);
+		
+		JLabel lblNewLabel = new JLabel("!: Digite apenas o CPF para deletar");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setBounds(40, 667, 223, 25);
+		frame.getContentPane().add(lblNewLabel);
 				
 	}
 	
@@ -171,10 +187,11 @@ public class TelaCliente {
 				textFieldEmail.getText(), 
 				textFieldTelefone.getText(), 
 				textFieldEndereço.getText());
-		
+		JOptionPane.showMessageDialog(null, "O cadastro foi feito com sucesso!");
+		limpar();
 	}
 	
-	public void limpar() {
+	private void limpar() {
 		textFieldNome.setText("");
 		textFieldCPF.setText("");
 		textFieldEmail.setText("");
@@ -182,7 +199,18 @@ public class TelaCliente {
 		textFieldTelefone.setText("");
 	}
 	
-	public boolean naoVazio() {
+	private void deletar() {
+		String cpf = textFieldCPF.getText();
+		controller.deletar(cpf);
+		JOptionPane.showMessageDialog(null, "O cadastro foi deletado com sucesso!");
+		limpar();
+	}
+	
+	private void atualizar() {
+		
+	}
+	
+	private boolean naoVazio() {
 		JTextField [] campos = {textFieldNome, textFieldCPF, textFieldEmail, textFieldEndereço, textFieldTelefone};
 		String[] nomesCampos = {"Nome", "CPF", "E-mail", "Endereço", "Telefone"};
 		for(int i=0; i < campos.length; i++) {
@@ -194,7 +222,7 @@ public class TelaCliente {
 		return true;
 	}
 	
-	public boolean validar() {
+	private boolean validar() {
 		JTextField [] campos = {textFieldNome, textFieldCPF, textFieldEmail, textFieldEndereço, textFieldTelefone};
 			
 			if(!campos[1].getText().matches("\\d+")) {
@@ -220,5 +248,16 @@ public class TelaCliente {
 				
 			return true;
 	}
+	
+	private boolean procurar() {
+	    String cpf = textFieldCPF.getText();
+	    boolean existe = controller.cpfExiste(cpf);
+	    
+	    if (!existe) {
+	        JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado");
+	        return false;
+	    }
+	    
+	    return true;
+	}
 }
-
