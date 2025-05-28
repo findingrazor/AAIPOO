@@ -10,4 +10,13 @@ public class ClienteController {
 		Cliente cliente = new Cliente(nome, cpf, email, telefone, endereco);
 		dao.salvar(cliente);
 	}
+	
+	public void deletar(String cpf) {
+		dao.deletarPorCpf(cpf);
+	}
+	
+	public boolean cpfExiste(String cpf) {
+	    return dao.cpfExiste(cpf);
+	}
 }
+
