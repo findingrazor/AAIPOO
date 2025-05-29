@@ -11,12 +11,13 @@ public class ClienteController {
 		dao.salvar(cliente);
 	}
 	
-	public void deletar(String cpf) {
+	public boolean deletar(String cpf) {
 		dao.deletarPorCpf(cpf);
+		if(dao.deletarPorCpf(cpf)==true) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 	
-	public boolean cpfExiste(String cpf) {
-	    return dao.cpfExiste(cpf);
-	}
 }
-
