@@ -1,4 +1,4 @@
-ackage model;
+package model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,32 +24,22 @@ public class ClienteDAO {
 		}
 	}
 	
-	public void deletarPorCpf(String cpf) {
+	public boolean deletarPorCpf(String cpf) {
         String sql = "DELETE FROM Cliente WHERE CPF = ?";
         Conexao.conectar();
         try (Connection conn = Conexao.conexao;
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, cpf);
-            stmt.executeUpdate();
-            Conexao.desconectar();
+            int linhasAfetadas = stmt.executeUpdate();
+            if (linhasAfetadas > 0) {
+            	return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+        	Conexao.desconectar();
         }
+        return false;
     }
-	
-	public boolean cpfExiste(String cpf) {
-	    String sql = "SELECT 1 FROM Cliente WHERE CPF = ?";
-	    Conexao.conectar();
-	    try (Connection conn = Conexao.conexao;
-	         PreparedStatement stmt = conn.prepareStatement(sql)) {
-	        stmt.setString(1, cpf);
-	        var rs = stmt.executeQuery();
-	        return rs.next(); 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        Conexao.desconectar(); 
-	    }
-	    return false;
-	}
+
 }
