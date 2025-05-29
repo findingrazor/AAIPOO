@@ -12,12 +12,7 @@ public class ClienteController {
 	}
 	
 	public boolean deletar(String cpf) {
-		dao.deletarPorCpf(cpf);
-		if(dao.deletarPorCpf(cpf)==true) {
-			return true;
-		}else {
-			return false;
-		}
+		return dao.deletarPorCpf(cpf);
 	}
 	
 }
