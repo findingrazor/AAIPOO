@@ -198,13 +198,13 @@ public class TelaCliente {
 
 	private boolean deletar() {
 		String cpf = textFieldCPF.getText();
-		boolean existe = controller.deletar(cpf);
+		boolean deletado = controller.deletar(cpf);
 
-		if (existe == false) {
+		if (!deletado) {
 			JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado");
+			limpar();
 			return false;
 		} else {
-			controller.deletar(cpf);
 			JOptionPane.showMessageDialog(null, "O cadastro foi deletado com sucesso!");
 			limpar();
 			return true;
