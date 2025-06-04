@@ -165,7 +165,7 @@ public class TelaCliente {
 		JButton btnAtualizar = new JButton("Atualizar");
 		btnAtualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				atualizar();
 			}
 		});
 		btnAtualizar.setForeground(new Color(63, 75, 85));
@@ -202,7 +202,6 @@ public class TelaCliente {
 
 		if (!deletado) {
 			JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado");
-			limpar();
 			return false;
 		} else {
 			JOptionPane.showMessageDialog(null, "O cadastro foi deletado com sucesso!");
@@ -211,8 +210,19 @@ public class TelaCliente {
 		}
 	}
 
-	private void atualizar() {
-
+	private boolean atualizar() {
+		JOptionPane.showInputDialog(null);
+		boolean atualizado = controller.atualizar(textFieldNome.getText(), textFieldCPF.getText(), textFieldEmail.getText(),
+				textFieldTelefone.getText(), textFieldEndereço.getText());
+		
+		if (!atualizado) {
+			JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado");
+			return false;
+		} else {
+			JOptionPane.showMessageDialog(null, "O cadastro foi atualizado com sucesso!");
+			limpar();
+			return true;
+		}
 	}
 
 	private boolean naoVazio() {
