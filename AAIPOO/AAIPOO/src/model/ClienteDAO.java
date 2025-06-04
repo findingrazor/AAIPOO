@@ -41,5 +41,28 @@ public class ClienteDAO {
         }
         return false;
     }
+	
+	public boolean atualizar(Cliente cliente) {
+		String sql = "UPDATE cliente SET Nome = ?, Email = ?, Telefone = ?, Endereço = ? "
+				+ "WHERE CPF = ?";
+		Conexao.conectar();
+		try(Connection conn = Conexao.conexao; PreparedStatement stmt = conn.prepareStatement(sql)){
+			stmt.setString(1, cliente.getNome());
+			stmt.setString(2, cliente.getEmail());
+			stmt.setString(3, cliente.getTelefone());
+			stmt.setString(4, cliente.getEndereco());
+			stmt.setString(5, cliente.getCpf());
+			int linhasAfetadas = stmt.executeUpdate();
+            if (linhasAfetadas > 0) {
+            	return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+        	Conexao.desconectar();
+        }
+        return false;
+		}
+	}
 
-}
+
