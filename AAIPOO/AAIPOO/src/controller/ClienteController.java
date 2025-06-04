@@ -15,4 +15,9 @@ public class ClienteController {
 		return dao.deletarPorCpf(cpf);
 	}
 	
+	public boolean atualizar(String nome, String cpf, String email, String telefone, String endereco) {
+		Cliente cliente = new Cliente(nome, cpf, email, telefone, endereco);
+		return dao.atualizar(cliente);
+	}
+	
 }
