@@ -2,7 +2,10 @@ package model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -62,7 +65,28 @@ public class ClienteDAO {
         	Conexao.desconectar();
         }
         return false;
-		}
 	}
-
-
+	
+	public Cliente carregar(String cpf) {
+		Cliente cliente = null;
+		String sql = "SELECT * FROM Cliente WHERE CPF = ?";
+        Conexao.conectar();
+        try (Connection conn = Conexao.conexao;
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+        	stmt.setString(1, cpf);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                cliente = new Cliente(
+                    rs.getString("Nome"),
+                    rs.getString("cpf"),
+                    rs.getString("email"),
+                    rs.getString("telefone"),
+                    rs.getString("endereço")   
+                );
+            }        
+            } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cliente;
+    }
+}
