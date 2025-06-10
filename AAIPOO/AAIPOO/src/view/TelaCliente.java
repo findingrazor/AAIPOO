@@ -9,12 +9,19 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatLightLaf;
 
 import controller.ClienteController;
+import model.Cliente;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JEditorPane;
+import java.awt.Canvas;
+import java.awt.Panel;
 
 public class TelaCliente {
 
@@ -31,6 +38,12 @@ public class TelaCliente {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		FlatLightLaf.setup();
+		try {
+		    UIManager.setLookAndFeel( new FlatLightLaf() );
+		} catch( Exception ex ) {
+		    System.err.println( "Failed to initialize LaF" );
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -61,123 +74,147 @@ public class TelaCliente {
 		frame.getContentPane().setLayout(null);
 		frame.setResizable(false);
 
-		JLabel lblTitulo = new JLabel("Cadastro Cliente");
+		JLabel lblTitulo = new JLabel("Gerenciamento Clientes");
 		lblTitulo.setForeground(Color.WHITE);
 		lblTitulo.setFont(new Font("Tahoma", Font.PLAIN, 32));
-		lblTitulo.setBounds(224, 32, 236, 40);
+		lblTitulo.setBounds(171, 28, 339, 40);
 		frame.getContentPane().add(lblTitulo);
 
 		JLabel lblNome = new JLabel("Nome");
 		lblNome.setForeground(Color.WHITE);
-		lblNome.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		lblNome.setBounds(40, 137, 62, 31);
+		lblNome.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNome.setBounds(27, 143, 62, 31);
 		frame.getContentPane().add(lblNome);
 
 		JLabel lblCPF = new JLabel("CPF");
 		lblCPF.setForeground(Color.WHITE);
-		lblCPF.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		lblCPF.setBounds(40, 214, 48, 31);
+		lblCPF.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblCPF.setBounds(27, 229, 41, 31);
 		frame.getContentPane().add(lblCPF);
 
 		JLabel lblEmail = new JLabel("Email");
 		lblEmail.setForeground(Color.WHITE);
-		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		lblEmail.setBounds(40, 291, 62, 31);
+		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblEmail.setBounds(27, 313, 62, 31);
 		frame.getContentPane().add(lblEmail);
 
 		JLabel lblTelefone = new JLabel("Telefone");
 		lblTelefone.setForeground(Color.WHITE);
-		lblTelefone.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		lblTelefone.setBounds(40, 368, 92, 31);
+		lblTelefone.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblTelefone.setBounds(27, 398, 92, 31);
 		frame.getContentPane().add(lblTelefone);
 
 		JLabel lblEndereo = new JLabel("Endereço");
 		lblEndereo.setForeground(Color.WHITE);
-		lblEndereo.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		lblEndereo.setBounds(40, 445, 101, 31);
+		lblEndereo.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblEndereo.setBounds(27, 480, 101, 31);
 		frame.getContentPane().add(lblEndereo);
 
 		textFieldNome = new JTextField();
 		textFieldNome.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		textFieldNome.setBounds(40, 172, 397, 31);
+		textFieldNome.setBounds(27, 172, 397, 31);
 		frame.getContentPane().add(textFieldNome);
 		textFieldNome.setColumns(10);
 
 		textFieldCPF = new JTextField();
 		textFieldCPF.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		textFieldCPF.setColumns(10);
-		textFieldCPF.setBounds(40, 249, 397, 31);
+		textFieldCPF.setBounds(27, 256, 397, 31);
 		frame.getContentPane().add(textFieldCPF);
 
 		textFieldEmail = new JTextField();
 		textFieldEmail.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		textFieldEmail.setColumns(10);
-		textFieldEmail.setBounds(40, 326, 397, 31);
+		textFieldEmail.setBounds(27, 340, 397, 31);
 		frame.getContentPane().add(textFieldEmail);
 
 		textFieldEndereço = new JTextField();
 		textFieldEndereço.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		textFieldEndereço.setColumns(10);
-		textFieldEndereço.setBounds(40, 477, 397, 31);
+		textFieldEndereço.setBounds(27, 508, 397, 31);
 		frame.getContentPane().add(textFieldEndereço);
 
 		textFieldTelefone = new JTextField();
 		textFieldTelefone.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		textFieldTelefone.setColumns(10);
-		textFieldTelefone.setBounds(40, 403, 397, 31);
+		textFieldTelefone.setBounds(27, 424, 397, 31);
 		frame.getContentPane().add(textFieldTelefone);
 
-		JButton btnSalvar = new JButton("Salvar");
-		btnSalvar.addActionListener(new ActionListener() {
+		JButton btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.setToolTipText("Cadastra um novo cliente no banco");
+		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (naoVazio() == true && validar() == true) {
 					salvar();
 				}
 			}
 		});
-		btnSalvar.setForeground(new Color(63, 75, 85));
-		btnSalvar.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		btnSalvar.setBounds(47, 598, 132, 40);
-		frame.getContentPane().add(btnSalvar);
+		btnCadastrar.setForeground(new Color(63, 75, 85));
+		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnCadastrar.setBounds(525, 324, 108, 31);
+		frame.getContentPane().add(btnCadastrar);
 
 		JButton btnLimpar = new JButton("Limpar");
+		btnLimpar.setToolTipText("Apaga todos os campos");
 		btnLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				limpar();
 			}
 		});
 		btnLimpar.setForeground(new Color(63, 75, 85));
-		btnLimpar.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		btnLimpar.setBounds(202, 598, 132, 40);
+		btnLimpar.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnLimpar.setBounds(525, 375, 108, 31);
 		frame.getContentPane().add(btnLimpar);
 
 		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.setToolTipText("Deleta um cadastro por CPF (somente CPF necessário)");
 		btnDeletar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				deletar();
 			}
 		});
 		btnDeletar.setForeground(new Color(63, 75, 85));
-		btnDeletar.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		btnDeletar.setBounds(352, 598, 132, 40);
+		btnDeletar.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnDeletar.setBounds(525, 273, 108, 31);
 		frame.getContentPane().add(btnDeletar);
 
 		JButton btnAtualizar = new JButton("Atualizar");
+		btnAtualizar.setToolTipText("Atualiza dados de um cadastro por CPF (preencha todos os campos)");
 		btnAtualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				atualizar();
 			}
 		});
 		btnAtualizar.setForeground(new Color(63, 75, 85));
-		btnAtualizar.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		btnAtualizar.setBounds(505, 598, 132, 40);
+		btnAtualizar.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnAtualizar.setBounds(525, 222, 108, 31);
 		frame.getContentPane().add(btnAtualizar);
-
-		JLabel lblNewLabel = new JLabel("!: Digite apenas o CPF para deletar");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setBounds(40, 667, 223, 25);
-		frame.getContentPane().add(lblNewLabel);
+		
+		JButton btnCarregar = new JButton("Carregar");
+		btnCarregar.setToolTipText("Preeenche todos os campos com dados de um CPF");
+		btnCarregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				carregar();
+			}
+		});
+		btnCarregar.setForeground(new Color(63, 75, 85));
+		btnCarregar.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnCarregar.setBounds(525, 171, 108, 31);
+		frame.getContentPane().add(btnCarregar);
+		
+		JButton btnAjuda = new JButton("Ajuda");
+		btnAjuda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Ações dos Botões\n"
+						+ "Carregar - Preeenche todos os campos com dados de um CPF\n"
+						+ "Atualizar - Atualiza dados de um cadastro por CPF (preencha todos os campos)\n"
+						+ "Deletar - Deleta um cadastro por CPF (somente CPF necessário)\n"
+						+ "Cadastrar - Cadastra um novo cliente no banco\n"
+						+ "Limpar - Apaga todos os campos");
+			}
+		});
+		btnAjuda.setBounds(585, 727, 89, 23);
+		frame.getContentPane().add(btnAjuda);
 
 	}
 
@@ -198,10 +235,14 @@ public class TelaCliente {
 
 	private boolean deletar() {
 		String cpf = textFieldCPF.getText();
+		if(textFieldCPF.getText().isBlank()) {
+			cpf = JOptionPane.showInputDialog("Digite o CPF que deseja deletar: ",null);
+		} 
+		
 		boolean deletado = controller.deletar(cpf);
 
 		if (!deletado) {
-			JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado");
+			JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado ou válido");
 			return false;
 		} else {
 			JOptionPane.showMessageDialog(null, "O cadastro foi deletado com sucesso!");
@@ -209,14 +250,32 @@ public class TelaCliente {
 			return true;
 		}
 	}
-
+	
+	private Cliente carregar() {
+		String cpf = JOptionPane.showInputDialog("Digite o CPF que deseja carregar: ",null);
+		Cliente cliente = controller.carregar(cpf);
+		
+		
+		textFieldNome.setText(cliente.getNome());
+		textFieldCPF.setText(cliente.getCpf());
+		textFieldEmail.setText(cliente.getEmail());
+		textFieldEndereço.setText(cliente.getEndereco());
+		textFieldTelefone.setText(cliente.getTelefone());
+		
+		return cliente;
+	}
 	private boolean atualizar() {
-		JOptionPane.showInputDialog(null);
 		boolean atualizado = controller.atualizar(textFieldNome.getText(), textFieldCPF.getText(), textFieldEmail.getText(),
 				textFieldTelefone.getText(), textFieldEndereço.getText());
 		
+		if(textFieldCPF.getText().isBlank()) {
+			String cpf = JOptionPane.showInputDialog("Digite o CPF que atualizar deletar: ",null);
+			atualizado = controller.atualizar(textFieldNome.getText(), cpf, textFieldEmail.getText(),
+					textFieldTelefone.getText(), textFieldEndereço.getText());
+		}
+		
 		if (!atualizado) {
-			JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado");
+			JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado ou válido");
 			return false;
 		} else {
 			JOptionPane.showMessageDialog(null, "O cadastro foi atualizado com sucesso!");
@@ -263,5 +322,4 @@ public class TelaCliente {
 
 		return true;
 	}
-
 }
