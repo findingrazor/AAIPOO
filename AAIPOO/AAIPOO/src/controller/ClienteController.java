@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import model.Cliente;
 import model.ClienteDAO;
 
@@ -20,4 +22,7 @@ public class ClienteController {
 		return dao.atualizar(cliente);
 	}
 	
+	public Cliente carregar(String cpf) {
+		return dao.carregar(cpf);
+	}
 }
