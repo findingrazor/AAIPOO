@@ -1,0 +1,11 @@
+package controller;
+
+import model.RelatorioDAO;
+import model.Detalhes;
+
+public class RelatorioController {
+	RelatorioDAO dao = new RelatorioDAO();
+	public List<Detalhes> todas(){
+		return dao.todas(); 
+	}
+}

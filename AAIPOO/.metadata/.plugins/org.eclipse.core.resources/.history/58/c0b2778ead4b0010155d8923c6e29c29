@@ -1,0 +1,29 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
+public class VendasDAO {
+	public void salvar(Vendas vendas) {
+		String sql = "INSERT INTO Detalhes(CodPedido, CodProduto, QntdProduto, ValorUni, Desconto, ValorTotal, ) VALUES (?, ?, ?, ?, ?, ?)"
+				+ "INSERT INTO Pedidos(CodPedidos, CodCliente, CodPag) VALUES (?, ?, ?)" + "INSERT INTO Pagamento()";
+		Conexao.conectar();
+		try(Connection conn = Conexao.conexao; PreparedStatement stmt = conn.prepareStatement(sql)){
+			
+			stmt.setInt(2, vendas.getQntdProd());
+			stmt.setInt(3, vendas.getProduto());
+			stmt.setFloat(4, vendas.getValorUni());
+			stmt.setFloat(5, vendas.getDesconto());
+			stmt.setFloat(6, vendas.getValorTotal());
+			
+			JOptionPane.showMessageDialog(null, stmt.toString());
+			stmt.executeUpdate();
+			Conexao.desconectar();
+		} catch (SQLException e) {
+			e.printStackTrace();		
+		}
+	}
+}

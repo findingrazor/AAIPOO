@@ -1,0 +1,34 @@
+package controller;
+
+import java.util.List;
+
+import model.Cliente;
+import model.ClienteDAO;
+import model.Relatorio;
+import view.TelaCliente;
+
+public class ClienteController{
+	ClienteDAO dao = new ClienteDAO();
+	
+	public boolean salvar(String nome, String cpf, String email, String telefone, String endereco) {
+		Cliente cliente = new Cliente(nome, cpf, email, telefone, endereco);
+		return dao.salvar(cliente);
+	}
+	
+	public boolean deletar(String cpf) {
+		return dao.deletar(cpf);
+	}
+	
+	public boolean atualizar(String nome, String cpf, String email, String telefone, String endereco) {
+		Cliente cliente = new Cliente(nome, cpf, email, telefone, endereco);
+		return dao.atualizar(cliente);
+	}
+	
+	public Cliente carregar(String cpf) {
+		return dao.carregar(cpf);
+	}
+	
+	public List<Cliente> listar(){
+		return dao.listar(); 
+	}
+}

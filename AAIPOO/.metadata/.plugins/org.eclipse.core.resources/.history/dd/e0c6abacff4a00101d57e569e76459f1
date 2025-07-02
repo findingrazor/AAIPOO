@@ -1,0 +1,72 @@
+package model;
+
+public class Relatorio {
+	private String nomeCliente;
+	private String nomeProduto;
+	private int codPedido;
+	private float qntdProd;
+	private float desconto;
+	private float valorTotal;
+	
+	public Relatorio(String nomeCliente, String nomeProduto, int codPedido, float qntdProd, float desconto,
+			float valorTotal) {
+		super();
+		this.nomeCliente = nomeCliente;
+		this.nomeProduto = nomeProduto;
+		this.codPedido = codPedido;
+		this.qntdProd = qntdProd;
+		this.desconto = desconto;
+		this.valorTotal = valorTotal;
+	}
+
+	public String getNomeCliente() {
+		return nomeCliente;
+	}
+
+	public void setNomeCliente(String nomeCliente) {
+		this.nomeCliente = nomeCliente;
+	}
+
+	public String getNomeProduto() {
+		return nomeProduto;
+	}
+
+	public void setNomeProduto(String nomeProduto) {
+		this.nomeProduto = nomeProduto;
+	}
+
+	public int getCodPedido() {
+		return codPedido;
+	}
+
+	public void setCodPedido(int codPedido) {
+		this.codPedido = codPedido;
+	}
+
+	public float getQntdProd() {
+		return qntdProd;
+	}
+
+	public void setQntdProd(float qntdProd) {
+		this.qntdProd = qntdProd;
+	}
+
+	public float getDesconto() {
+		return desconto;
+	}
+
+	public void setDesconto(float desconto) {
+		this.desconto = desconto;
+	}
+
+	public float getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(float valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+	
+	
+}
+	

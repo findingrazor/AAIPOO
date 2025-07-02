@@ -1,0 +1,12 @@
+package controller;
+
+import model.FormaPagDAO;
+
+
+public class FormaPagController {
+	FormaPagDAO dao = new FormaPagDAO();
+	
+	public List<FormaPag> listar(){
+		return dao.listarTodos();
+	}
+}

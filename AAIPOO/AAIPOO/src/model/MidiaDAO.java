@@ -1,0 +1,35 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+
+public final class MidiaDAO {
+	
+	public List<Midia> listarTodos() {
+        List<Midia> lista = new ArrayList<>();
+        String sql = "SELECT * FROM midia";
+        Conexao.conectar();
+        try (Connection conn = Conexao.conexao;
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Midia midia = new Midia(
+                	rs.getInt("codMidia"),
+                    rs.getString("tipo")
+                );
+                lista.add(midia);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+	
+
+}

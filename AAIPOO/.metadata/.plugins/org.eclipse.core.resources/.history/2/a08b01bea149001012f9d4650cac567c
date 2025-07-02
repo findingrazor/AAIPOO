@@ -1,0 +1,157 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.SQLException;
+
+public class RelatorioDAO {
+	public List<Detalhes> todas() {
+		List<Detalhes> lista = new ArrayList<>();
+        String sql = "SELECT C.nome AS nomeCliente, P.nome AS nomeProduto, Pe.codPedido, D.qntdProd, D.desconto, D.valorTotal\r\n"
+        		+ "FROM detalhes D INNER JOIN produto P ON P.codProduto = D.codProduto\r\n"
+        		+ "INNER JOIN pedido Pe ON Pe.codPedido = D.codPedido\r\n"
+        		+ "INNER JOIN cliente C ON C.codCliente = Pe.codCliente\r\n"
+        		+ "GROUP BY C.nome, P.nome, Pe.codPedido, D.qntdProd, D.desconto, D.valorTotal;";
+        Conexao.conectar();
+        try (Connection conn = Conexao.conexao;
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Detalhes detalhes = new Detalhes(
+                    rs.getString("nomeCliente"),
+                    rs.getString("nomeProduto"),
+                    rs.getInt("codPedido"),
+                    rs.getFloat("qntdProd"),
+                    rs.getFloat("desconto"),
+                    rs.getFloat("valorTotal")
+                );
+                lista.add(detalhes);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+	}
+	
+	public List<Detalhes> produto(String produto) {
+		List<Detalhes> lista = new ArrayList<>();
+        String sql = "SELECT C.nome AS nomeCliente, P.nome AS nomeProduto, Pe.codPedido, D.qntdProd, D.desconto, D.valorTotal\r\n"
+        		+ "FROM detalhes D INNER JOIN produto P ON P.codProduto = D.codProduto\r\n"
+        		+ "INNER JOIN pedido Pe ON Pe.codPedido = D.codPedido\r\n"
+        		+ "INNER JOIN cliente C ON C.codCliente = Pe.codCliente\r\n"
+        		+ "WHERE P.nome = ?\r\n"
+        		+ "GROUP BY C.nome, P.nome, Pe.codPedido, D.qntdProd, D.desconto, D.valorTotal;";
+        Conexao.conectar();
+        try (Connection conn = Conexao.conexao;
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            	 stmt.setString(1, produto);
+            	 ResultSet rs = stmt.executeQuery();
+                     while (rs.next()) {
+                         Detalhes detalhes = new Detalhes(
+                             rs.getString("nomeCliente"),
+                             rs.getString("nomeProduto"),
+                             rs.getInt("codPedido"),
+                             rs.getFloat("qntdProd"),
+                             rs.getFloat("desconto"),
+                             rs.getFloat("valorTotal")
+                         );
+                         lista.add(detalhes);
+             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+	}
+	
+	public List<Detalhes> cliente(String cliente) {
+		List<Detalhes> lista = new ArrayList<>();
+        String sql = "SELECT C.nome AS nomeCliente, P.nome AS nomeProduto, Pe.codPedido, D.qntdProd, D.desconto, D.valorTotal\r\n"
+        		+ "FROM detalhes D INNER JOIN produto P ON P.codProduto = D.codProduto\r\n"
+        		+ "INNER JOIN pedido Pe ON Pe.codPedido = D.codPedido\r\n"
+        		+ "INNER JOIN cliente C ON C.codCliente = Pe.codCliente\r\n"
+        		+ "WHERE C.nome = ?\r\n"
+        		+ "GROUP BY C.nome, P.nome, Pe.codPedido, D.qntdProd, D.desconto, D.valorTotal;";
+        Conexao.conectar();
+        try (Connection conn = Conexao.conexao;
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            	 stmt.setString(1, cliente);
+            	 ResultSet rs = stmt.executeQuery();
+                     while (rs.next()) {
+                         Detalhes detalhes = new Detalhes(
+                             rs.getString("nomeCliente"),
+                             rs.getString("nomeProduto"),
+                             rs.getInt("codPedido"),
+                             rs.getFloat("qntdProd"),
+                             rs.getFloat("desconto"),
+                             rs.getFloat("valorTotal")
+                         );
+                         lista.add(detalhes);
+             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+	}
+	
+	public List<Detalhes> valor(int valor) {
+		List<Detalhes> lista = new ArrayList<>();
+        String sql = "SELECT C.nome AS nomeCliente, P.nome AS nomeProduto, Pe.codPedido, D.qntdProd, D.desconto, D.valorTotal\r\n"
+        		+ "FROM detalhes D INNER JOIN produto P ON P.codProduto = D.codProduto\r\n"
+        		+ "INNER JOIN pedido Pe ON Pe.codPedido = D.codPedido\r\n"
+        		+ "INNER JOIN cliente C ON C.codCliente = Pe.codCliente\r\n"
+        		+ "WHERE D.valorTotal >= ?\r\n"
+        		+ "GROUP BY C.nome, P.nome, Pe.codPedido, D.qntdProd, D.desconto, D.valorTotal;";
+        Conexao.conectar();
+        try (Connection conn = Conexao.conexao;
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            	 stmt.setInt(1, valor);
+            	 ResultSet rs = stmt.executeQuery();
+                     while (rs.next()) {
+                         Detalhes detalhes = new Detalhes(
+                             rs.getString("nomeCliente"),
+                             rs.getString("nomeProduto"),
+                             rs.getInt("codPedido"),
+                             rs.getFloat("qntdProd"),
+                             rs.getFloat("desconto"),
+                             rs.getFloat("valorTotal")
+                         );
+                         lista.add(detalhes);
+             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+	}
+	
+	public List<Detalhes> maiorLucro() {
+		List<Detalhes> lista = new ArrayList<>();
+        String sql = "SELECT C.nome AS nomeCliente, P.nome AS nomeProduto, Pe.codPedido, D.qntdProd, D.desconto, MAX(D.valorTotal)\r\n"
+        		+ "FROM detalhes D INNER JOIN produto P ON P.codProduto = D.codProduto\r\n"
+        		+ "INNER JOIN pedido Pe ON Pe.codPedido = D.codPedido\r\n"
+        		+ "INNER JOIN cliente C ON C.codCliente = Pe.codCliente\r\n"
+        		+ "WHERE P.nome = ?\r\n"
+        		+ "GROUP BY C.nome, P.nome, Pe.codPedido, D.qntdProd, D.desconto;";
+        Conexao.conectar();
+        try (Connection conn = Conexao.conexao;
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            	 ResultSet rs = stmt.executeQuery();
+                     while (rs.next()) {
+                         Detalhes detalhes = new Detalhes(
+                             rs.getString("nomeCliente"),
+                             rs.getString("nomeProduto"),
+                             rs.getInt("codPedido"),
+                             rs.getFloat("qntdProd"),
+                             rs.getFloat("desconto"),
+                             rs.getFloat("valorTotal")
+                         );
+                         lista.add(detalhes);
+             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+	}
+}

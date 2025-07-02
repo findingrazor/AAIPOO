@@ -1,0 +1,21 @@
+package controller;
+
+import model.RelatorioDAO;
+import java.util.List;
+import model.Detalhes;
+
+public class RelatorioController {
+	RelatorioDAO dao = new RelatorioDAO();
+	
+	public List<Detalhes> todas(){
+		return dao.todas(); 
+	}
+	
+	public List<Detalhes> produto(String produto){
+		return dao.produto(produto); 
+	}
+	
+	public List<Detalhes> cliente(String cliente){
+		return dao.cliente(cliente); 
+	}
+}

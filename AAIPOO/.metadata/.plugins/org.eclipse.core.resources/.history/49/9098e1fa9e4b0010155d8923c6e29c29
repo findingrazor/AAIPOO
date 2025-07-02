@@ -1,0 +1,465 @@
+package view;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.AbstractListModel;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import controller.GeneroController;
+import controller.MidiaController;
+import controller.ProdutoController;
+import model.Cliente;
+import model.Genero;
+import model.Midia;
+import model.Produto;
+
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.util.List;
+
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+
+public class TelaProduto {
+
+	public JFrame frame;
+	private JTextField textFieldProduto;
+	private JLabel lblProduto;
+	private JLabel lblMidia;
+	private JTextField textFieldEstoque;
+	private JTextField textFieldPreço;
+	private JTable tblResultados;
+	JComboBox <String> comboBoxMidia = new JComboBox<>();
+	JComboBox <String> comboBoxGenero = new JComboBox<>();
+	
+	private DefaultTableModel modelo = new DefaultTableModel();
+	
+	private ProdutoController controller = new ProdutoController();
+	private MidiaController controllerMidia = new MidiaController();
+	private GeneroController controllerGenero = new GeneroController();
+
+	/**
+	 * Launch the application.
+	 */
+	
+	public static void main(String[] args) {
+		FlatLightLaf.setup();
+		try {
+		    UIManager.setLookAndFeel( new FlatLightLaf() );
+		} catch( Exception ex ) {
+		    System.err.println( "Failed to initialize LaF" );
+		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					TelaProduto window = new TelaProduto();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public TelaProduto() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(255, 255, 255));
+		frame.setBounds(0, 0, 700, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		textFieldProduto = new JTextField();
+		textFieldProduto.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		textFieldProduto.setBounds(30, 156, 416, 31);
+		frame.getContentPane().add(textFieldProduto);
+		textFieldProduto.setColumns(10);
+		
+		JLabel lblCadastroProduto = new JLabel("Cadastro Produto");
+		lblCadastroProduto.setForeground(new Color(0, 0, 0));
+		lblCadastroProduto.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 32));
+		lblCadastroProduto.setBounds(224, 29, 260, 40);
+		frame.getContentPane().add(lblCadastroProduto);
+		
+		lblProduto = new JLabel("Produto");
+		lblProduto.setForeground(new Color(0, 0, 0));
+		lblProduto.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblProduto.setBounds(30, 121, 136, 31);
+		frame.getContentPane().add(lblProduto);
+		
+		lblMidia = new JLabel("Mídia");
+		lblMidia.setForeground(new Color(0, 0, 0));
+		lblMidia.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblMidia.setBounds(30, 198, 136, 31);
+		frame.getContentPane().add(lblMidia);
+		
+		carregarComboMidia();
+		comboBoxMidia.setBackground(new Color(255, 255, 255));
+		comboBoxMidia.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 11));
+		comboBoxMidia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String selecionado = (String) comboBoxMidia.getSelectedItem();
+				
+				if (selecionado.equals("Selecione um tipo")) {
+					JOptionPane.showMessageDialog(null, "Selecione uma opção válida");
+				}
+			}
+		});
+		comboBoxMidia.setBounds(30, 233, 141, 31);
+		frame.getContentPane().add(comboBoxMidia);
+		
+		JLabel lblGenero = new JLabel("Gênero");
+		lblGenero.setForeground(new Color(0, 0, 0));
+		lblGenero.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblGenero.setBounds(286, 198, 136, 31);
+		frame.getContentPane().add(lblGenero);
+		
+		carregarComboGenero();
+		comboBoxGenero.setBackground(new Color(255, 255, 255));
+		comboBoxGenero.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 11));
+		comboBoxGenero.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String selecionado = (String) comboBoxGenero.getSelectedItem();
+				
+				if (selecionado.equals("Selecione um genero musical")) {
+					JOptionPane.showMessageDialog(null, "Selecione uma opção válida");
+				}
+			}
+		});
+		comboBoxGenero.setBounds(286, 233, 160, 31);
+		frame.getContentPane().add(comboBoxGenero);
+		
+		JLabel lblEstoque = new JLabel("Estoque");
+		lblEstoque.setForeground(new Color(0, 0, 0));
+		lblEstoque.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblEstoque.setBounds(30, 275, 136, 31);
+		frame.getContentPane().add(lblEstoque);
+		
+		textFieldEstoque = new JTextField();
+		textFieldEstoque.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 11));
+		textFieldEstoque.setColumns(10);
+		textFieldEstoque.setBounds(30, 307, 141, 31);
+		frame.getContentPane().add(textFieldEstoque);
+		
+		JLabel lblPreo = new JLabel("Preço");
+		lblPreo.setForeground(new Color(0, 0, 0));
+		lblPreo.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblPreo.setBounds(286, 276, 136, 31);
+		frame.getContentPane().add(lblPreo);
+		
+		textFieldPreço = new JTextField();
+		textFieldPreço.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 11));
+		textFieldPreço.setColumns(10);
+		textFieldPreço.setBounds(286, 307, 160, 31);
+		frame.getContentPane().add(textFieldPreço);
+		
+		JButton btnSalvar = new JButton("Cadastrar");
+		btnSalvar.setToolTipText("Cadastra um novo produto no banco");
+		btnSalvar.setBackground(new Color(0, 64, 128));
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				salvar();
+			}
+		});
+		
+		btnSalvar.setForeground(new Color(255, 255, 255));
+		btnSalvar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnSalvar.setBounds(547, 283, 108, 31);
+		frame.getContentPane().add(btnSalvar);
+		
+		JButton btnLimpar = new JButton("Limpar");
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				limpar();
+			}
+		});
+		btnLimpar.setToolTipText("Apaga todos os campos");
+		btnLimpar.setBackground(new Color(0, 64, 128));
+		
+		btnLimpar.setForeground(new Color(255, 255, 255));
+		btnLimpar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnLimpar.setBounds(547, 325, 108, 31);
+		frame.getContentPane().add(btnLimpar);
+		
+		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.setToolTipText("Deleta um cadastro por nome (somente nome necessário)");
+		btnDeletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deletar();
+			}
+		});
+		btnDeletar.setBackground(new Color(0, 64, 128));
+		btnDeletar.setForeground(new Color(255, 255, 255));
+		btnDeletar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnDeletar.setBounds(547, 241, 108, 31);
+		frame.getContentPane().add(btnDeletar);
+		
+		JButton btnAtualizar = new JButton("Atualizar");	
+		btnAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				atualizar();
+			}
+		});
+		btnAtualizar.setToolTipText("Atualiza dados de um cadastro por nome (preencha todos os campos)");
+		btnAtualizar.setBackground(new Color(0, 64, 128));
+		btnAtualizar.setForeground(new Color(255, 255, 255));
+		btnAtualizar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnAtualizar.setBounds(547, 199, 108, 31);
+		frame.getContentPane().add(btnAtualizar);
+		
+		JButton btnVoltar = new JButton("<");
+		btnVoltar.setForeground(new Color(255, 255, 255));
+		btnVoltar.setBackground(new Color(0, 64, 128));
+		btnVoltar.setFont(new Font("Malgun Gothic Semilight", Font.BOLD, 16));
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaMenu telamenu = new TelaMenu();
+				telamenu.frame.setVisible(true);
+				frame.dispose();
+			}
+		});
+		btnVoltar.setBounds(619, 11, 55, 31);
+		frame.getContentPane().add(btnVoltar);
+		
+		JLabel lblLogo = new JLabel();
+		lblLogo.setBounds(10, 11, 100, 100);
+		
+		ImageIcon logo = new ImageIcon(getClass().getResource("/images/logo_nome.png"));
+		logo.setImage(logo.getImage().getScaledInstance(lblLogo.getWidth(), lblLogo.getHeight(), 1));
+        lblLogo.setIcon(logo);
+		frame.getContentPane().add(lblLogo);
+		
+		JButton btnCarregar = new JButton("Carregar");
+		btnCarregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				carregar();
+			}
+		});
+		btnCarregar.setToolTipText("Preeenche todos os campos com dados de um produto");
+		btnCarregar.setForeground(Color.WHITE);
+		btnCarregar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnCarregar.setBackground(new Color(0, 64, 128));
+		btnCarregar.setBounds(547, 156, 108, 31);
+		frame.getContentPane().add(btnCarregar);
+		
+		JButton btnAjuda = new JButton("Ajuda");
+		btnAjuda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Ações dos Botões\n"
+						+ "Carregar - Preeenche todos os campos com dados de um produto\n"
+						+ "Atualizar - Atualiza dados de um cadastro por nome (preencha todos os campos)\n"
+						+ "Deletar - Deleta um cadastro por nome (somente nome necessário)\n"
+						+ "Cadastrar - Cadastra um novo produto no banco\n"
+						+ "Limpar - Apaga todos os campos");
+			}
+		});
+		btnAjuda.setForeground(Color.WHITE);
+		btnAjuda.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 11));
+		btnAjuda.setBackground(new Color(0, 64, 128));
+		btnAjuda.setBounds(585, 727, 89, 23);
+		frame.getContentPane().add(btnAjuda);
+		
+		modelo = new DefaultTableModel(new String[] {
+				"Nome", "Tipo", "Gênero", "Estoque", "Preço"	
+			}, 0);
+			
+			tblResultados = new JTable(modelo);
+			tblResultados.setBounds(27, 564, 397, 174);
+			frame.getContentPane().add(tblResultados);
+			
+			JScrollPane scroll = new JScrollPane(tblResultados);
+			scroll.setBounds(27, 369, 419, 369); 
+			frame.getContentPane().add(scroll);
+			listar();
+	}
+	
+	private boolean salvar() {
+		boolean salvo = controller.salvar(textFieldProduto.getText(), comboBoxMidia.getSelectedItem().toString(),comboBoxGenero.getSelectedItem().toString(), 
+				Integer.parseInt(textFieldEstoque.getText()) , Float.parseFloat(textFieldPreço.getText()) );
+		
+		if(!salvo) {
+			JOptionPane.showMessageDialog(null, "Erro, já existe um produto com esse nome e essa mídia");
+			return false;
+		}else {
+			JOptionPane.showMessageDialog(null, "O cadastro foi realizado com sucesso!");
+			limpar();
+			listar();
+			return true;
+		}
+	}
+	
+	private void limpar() {
+		textFieldProduto.setText("");
+		comboBoxMidia.setSelectedIndex(0);
+		comboBoxGenero.setSelectedIndex(0);
+		textFieldEstoque.setText("");
+		textFieldPreço.setText("");
+	}
+	
+	private boolean deletar() {
+		String nome = textFieldProduto.getText();
+		String midia = (String) comboBoxMidia.getSelectedItem();
+		if(textFieldProduto.getText().isBlank() || comboBoxMidia.getSelectedItem().equals("Selecione um tipo")) {
+			nome = JOptionPane.showInputDialog("Digite o Produto que deseja deletar: ",null);
+			midia = JOptionPane.showInputDialog("Digite a midia que deseja deletar: ", null);
+		}
+		
+		boolean deletado = controller.deletar(nome,midia);
+		
+		if (!deletado) {
+			JOptionPane.showMessageDialog(null, "Produto não encontrado, por favor digite um Produto cadastrado ou válido");
+			return false;
+		} else {
+			JOptionPane.showMessageDialog(null, "O cadastro foi deletado com sucesso!");
+			limpar();
+			listar();
+			return true;
+		}
+	}
+	
+	private boolean atualizar() {
+		String nome = textFieldProduto.getText();
+		String midia = comboBoxMidia.getSelectedItem().toString();
+
+		
+		if (nome.isBlank() || midia.equals("Selecione um tipo")) {
+			nome = JOptionPane.showInputDialog("Digite o Produto que deseja atualizar:", null);
+			midia = JOptionPane.showInputDialog("Digite a mídia que deseja atualizar:", null);
+			textFieldProduto.setText(nome);
+			comboBoxMidia.setSelectedItem(midia);
+		}
+		
+		boolean atualizado = controller.atualizar(nome, midia, comboBoxGenero.getSelectedItem().toString(), 
+			Integer.parseInt(textFieldEstoque.getText()), Float.parseFloat(textFieldPreço.getText()) );
+			
+			
+			if (!atualizado) {
+				JOptionPane.showMessageDialog(null, "Produto não encontrado, por favor digite um Produto cadastrado ou válido");
+				return false;
+			} else {
+				JOptionPane.showMessageDialog(null, "O cadastro foi atualizado com sucesso!");
+				limpar();
+				listar();
+				return true;
+			}
+	}
+	
+	private void carregarComboMidia() {
+		List<Midia> midias = controllerMidia.listar();
+
+		comboBoxMidia.addItem("Selecione um tipo");
+		for (Midia u : midias) {
+			comboBoxMidia.addItem(u.getMidia());
+		}
+	}
+	
+	private void carregarComboGenero() {
+		List<Genero> genero = controllerGenero.listarG();
+		
+		comboBoxGenero.addItem("Selecione um genero musical");
+		for (Genero u : genero) {
+			comboBoxGenero.addItem(u.getGenero());
+		}
+	}
+	
+	private void listar() {
+		modelo.setRowCount(0);
+		List<Produto> produto = controller.listar();
+		
+		for (Produto u : produto) {
+			Object[] row = { u.getProduto(), u.getMidia(), u.getGenero(), u.getEstoque(), u.getPreço()};
+			modelo.addRow(row);
+		}
+		tblResultados.setModel(modelo);
+	}
+	
+	private Produto carregar() {
+		String nome = JOptionPane.showInputDialog("Digite o nome do Produto que deseja carregar: ",null);
+		String midia = JOptionPane.showInputDialog("Digite a mídia do Produto que deseja carregar: ",null);
+		Produto produto = controller.carregar(nome, midia);
+		
+		textFieldProduto.setText(produto.getGenero());
+		textFieldPreço.setText(String.valueOf(produto.getPreço()));
+		textFieldEstoque.setText(String.valueOf(produto.getEstoque()));
+		comboBoxGenero.setSelectedItem(produto.getGenero());
+		comboBoxMidia.setSelectedItem(produto.getMidia());
+		
+		return produto;
+	}
+	
+	private boolean naoVazio() {
+		JTextField[] campos = { textFieldProduto, textFieldPreço, textFieldEstoque };
+		JComboBox [] combos = { comboBoxGenero, comboBoxMidia};
+		String[] nomesCampos = { "Produto", "Preço", "Estoque" };
+		String[] nomesCombos = {"Gênero", "Mídia"};
+		for (int i = 0; i < campos.length; i++) {
+			if (campos[i].getText().isBlank()) {
+				JOptionPane.showMessageDialog(null, "O campo " + nomesCampos[i] + " está vazio, por favor, preencha-o");
+				return false;
+			}
+		}
+		
+		for (int i = 0; i < combos.length; i++) {
+			if(comboBoxGenero.getSelectedItem().equals() || comboBoxMidia.getSelectedItem().equals()) {
+				JOptionPane.showMessageDialog(null, "O campo " + nomesCombos[i] + " está vazio, por favor, preencha-o");
+			}
+		}
+		return true;
+	}
+
+	private boolean validar() {
+		JTextField[] campos = { textFieldNome, textFieldCPF, textFieldEmail, textFieldEndereço, textFieldTelefone };
+
+		if (!campos[1].getText().matches("\\d+")) {
+			JOptionPane.showMessageDialog(null, "CPF inválido, por favor digite apenas números");
+			return false;
+		} else if (campos[1].getText().length() != 11) {
+			JOptionPane.showMessageDialog(null, "CPF inválido, por favor digite um número válido (11 caracteres)");
+			return false;
+		}
+
+		if ((!campos[2].getText().contains("@") || !campos[2].getText().contains(".com")) && !campos[2].getText().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Email inválido, por favor digite um email com pelo menos @ e .com");
+			return false;
+		}
+
+		if (!campos[4].getText().matches("\\d+")) {
+			JOptionPane.showMessageDialog(null, "Telefone inválido, por favor digite apenas números");
+			return false;
+		} else if (campos[4].getText().length() != 11) {
+			JOptionPane.showMessageDialog(null, "Telefone inválido, por favor digite um número válido (11 caracteres)");
+			return false;
+		}
+
+		return true;
+	}
+}

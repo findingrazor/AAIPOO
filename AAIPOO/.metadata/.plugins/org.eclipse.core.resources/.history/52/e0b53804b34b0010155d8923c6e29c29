@@ -1,0 +1,68 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
+public final class VendasDAO {
+	public boolean salvar(Vendas vendas) {
+	    String sqlVerifica = "SELECT 1 FROM Pedido p " +
+	                         "INNER JOIN Detalhes d ON p.CodPedido = d.CodPedido " +
+	                         "INNER JOIN Cliente c ON p.CodCliente = c.CodCliente " +
+	                         "INNER JOIN Produto pr ON d.CodProduto = pr.CodProduto " +
+	                         "WHERE c.Nome = ? AND pr.Nome = ?";
+
+	    String inserirPedido = "INSERT INTO Pedidos(CodPedidos, CodCliente, CodPag) VALUES (?, ?, ?)";
+	    String inserirDetalhes = "INSERT INTO Detalhes(CodPedido, CodProduto, qntdProd, ValorUni, Desconto, ValorTotal) VALUES (?, ?, ?, ?, ?, ?)";
+
+	    Conexao.conectar();
+	    try (Connection conn = Conexao.conexao) {
+	        // Verifica se já existe uma venda com o mesmo cliente e produto
+	        try (PreparedStatement stmtVerifica = conn.prepareStatement(sqlVerifica)) {
+	            stmtVerifica.setString(1, vendas.getNomeCliente());
+	            stmtVerifica.setString(2, vendas.getNomeProduto());
+
+	            ResultSet rs = stmtVerifica.executeQuery();
+	            if (rs.next()) {
+	                JOptionPane.showMessageDialog(null, "Este cliente já comprou este produto!");
+	                return false;
+	            }
+	        }
+
+	        // Insere pedido
+	        try (PreparedStatement stmtPedido = conn.prepareStatement(inserirPedido)) {
+	            stmtPedido.setInt(1, vendas.getCodPedido());
+	            stmtPedido.setInt(2, vendas.getCodCliente());
+	            stmtPedido.setInt(3, vendas.getCodPagamento());
+	            stmtPedido.executeUpdate();
+	        }
+
+	        // Insere detalhes
+	        try (PreparedStatement stmtDetalhes = conn.prepareStatement(inserirDetalhes)) {
+	            for (Detalhes d : vendas.getListaDetalhes()) {
+	                stmtDetalhes.setInt(1, vendas.getCodPedido());
+	                stmtDetalhes.setInt(2, d.getCodProduto());
+	                stmtDetalhes.setInt(3, d.getQntdProd());
+	                stmtDetalhes.setFloat(4, d.getValorUni());
+	                stmtDetalhes.setFloat(5, d.getDesconto());
+	                stmtDetalhes.setFloat(6, d.getValorTotal());
+	                stmtDetalhes.addBatch();
+	            }
+	            stmtDetalhes.executeBatch();
+	        }
+
+	        Conexao.desconectar();
+	        return true;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Erro ao salvar venda!");
+	    }
+
+	    return false;
+	}
+
+}
+

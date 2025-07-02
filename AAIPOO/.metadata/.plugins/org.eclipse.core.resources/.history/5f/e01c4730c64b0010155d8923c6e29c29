@@ -1,0 +1,434 @@
+package view;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
+import controller.FormaPagController;
+import controller.ProdutoController;
+import controller.VendasController;
+import model.Cliente;
+import model.FormaPag;
+import model.Genero;
+import model.Vendas;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+
+public class TelaVendas extends TelaBase implements MetodosObrigatorios{
+
+	private JFrame frame;
+	private JTextField textFieldProduto;
+	private JTextField textFieldCliente;
+	private JTextField textFieldQntdProduto;
+	private JTextField textFieldUnidade;
+	private JTextField textFieldDesconto;
+	private JTextField textFieldTotal;
+	private JTable tblResultados;
+	private JComboBox comboBoxPag = new JComboBox();
+	
+	private DefaultTableModel modelo = new DefaultTableModel();
+	
+	private FormaPagController controllerPag = new FormaPagController();
+	private VendasController controller = new VendasController();
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		FlatLightLaf.setup();
+		try {
+		    UIManager.setLookAndFeel( new FlatLightLaf() );
+		} catch( Exception ex ) {
+		    System.err.println( "Failed to initialize LaF" );
+		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					TelaVendas window = new TelaVendas();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public TelaVendas() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(255, 255, 255));
+		frame.setBounds(0, 0, 700, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JLabel lblGerenciamentoVendas = new JLabel("Gerenciamento Vendas");
+		lblGerenciamentoVendas.setForeground(new Color(0, 0, 0));
+		lblGerenciamentoVendas.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 32));
+		lblGerenciamentoVendas.setBounds(185, 32, 337, 40);
+		frame.getContentPane().add(lblGerenciamentoVendas);
+		
+		JLabel lblCliente = new JLabel("Cliente:");
+		lblCliente.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblCliente.setForeground(new Color(0, 0, 0));
+		lblCliente.setBounds(57, 121, 77, 23);
+		frame.getContentPane().add(lblCliente);
+		
+		textFieldCliente = new JTextField();
+		textFieldCliente.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 11));
+		textFieldCliente.setBounds(57, 155, 416, 31);
+		frame.getContentPane().add(textFieldCliente);
+		textFieldCliente.setColumns(10);
+		
+		JLabel lblProduto = new JLabel("Produto:");
+		lblProduto.setForeground(new Color(0, 0, 0));
+		lblProduto.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblProduto.setBounds(57, 197, 109, 23);
+		frame.getContentPane().add(lblProduto);
+		
+		textFieldProduto = new JTextField();
+		textFieldProduto.setBounds(57, 231, 416, 31);
+		frame.getContentPane().add(textFieldProduto);
+		textFieldProduto.setColumns(10);
+		
+		JLabel lblFormaDePagamento = new JLabel("Pagamento:");
+		lblFormaDePagamento.setForeground(new Color(0, 0, 0));
+		lblFormaDePagamento.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblFormaDePagamento.setBounds(339, 269, 109, 31);
+		frame.getContentPane().add(lblFormaDePagamento);
+		
+		carregarComboPag();
+		comboBoxPag.setBounds(339, 299, 134, 31);
+		frame.getContentPane().add(comboBoxPag);
+		
+		JLabel lblQntdProduto = new JLabel("Quantidade:");
+		lblQntdProduto.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblQntdProduto.setForeground(new Color(0, 0, 0));
+		lblQntdProduto.setBounds(57, 273, 131, 23);
+		frame.getContentPane().add(lblQntdProduto);
+		
+		textFieldQntdProduto = new JTextField();
+		textFieldQntdProduto.setBounds(57, 299, 131, 31);
+		frame.getContentPane().add(textFieldQntdProduto);
+		textFieldQntdProduto.setColumns(10);
+		
+		JLabel lblUnidade = new JLabel("Valor Unitário:");
+		lblUnidade.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblUnidade.setForeground(new Color(0, 0, 0));
+		lblUnidade.setBounds(198, 273, 131, 23);
+		frame.getContentPane().add(lblUnidade);
+		
+		textFieldUnidade = new JTextField();
+		textFieldUnidade.setBounds(198, 299, 131, 31);
+		frame.getContentPane().add(textFieldUnidade);
+		textFieldUnidade.setColumns(10);
+		
+		JLabel lblDesconto = new JLabel("Desconto:");
+		lblDesconto.setBackground(new Color(255, 255, 255));
+		lblDesconto.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblDesconto.setForeground(new Color(0, 0, 0));
+		lblDesconto.setBounds(57, 343, 113, 23);
+		frame.getContentPane().add(lblDesconto);
+		
+		textFieldDesconto = new JTextField();
+		textFieldDesconto.setBounds(57, 368, 131, 31);
+		frame.getContentPane().add(textFieldDesconto);
+		textFieldDesconto.setColumns(10);
+		
+		JLabel lblVlrTotal = new JLabel("Total:");
+		lblVlrTotal.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblVlrTotal.setForeground(new Color(0, 0, 0));
+		lblVlrTotal.setBounds(198, 343, 67, 23);
+		frame.getContentPane().add(lblVlrTotal);
+		
+		textFieldTotal = new JTextField();
+		textFieldTotal.setBounds(198, 368, 131, 31);
+		frame.getContentPane().add(textFieldTotal);
+		textFieldTotal.setColumns(10);
+		
+		JButton btnSalvar = new JButton("Cadastrar");
+		btnSalvar.setToolTipText("Cadastra um novo produto no banco");
+		btnSalvar.setBackground(new Color(0, 64, 128));
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				salvar();
+			}
+		});
+		
+		btnSalvar.setForeground(new Color(255, 255, 255));
+		btnSalvar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnSalvar.setBounds(547, 283, 108, 31);
+		frame.getContentPane().add(btnSalvar);
+		
+		JButton btnLimpar = new JButton("Limpar");
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				limpar();
+			}
+		});
+		btnLimpar.setToolTipText("Apaga todos os campos");
+		btnLimpar.setBackground(new Color(0, 64, 128));
+		
+		btnLimpar.setForeground(new Color(255, 255, 255));
+		btnLimpar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnLimpar.setBounds(547, 325, 108, 31);
+		frame.getContentPane().add(btnLimpar);
+		
+		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.setToolTipText("Deleta um cadastro por nome (somente nome necessário)");
+		btnDeletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deletar();
+			}
+		});
+		btnDeletar.setBackground(new Color(0, 64, 128));
+		btnDeletar.setForeground(new Color(255, 255, 255));
+		btnDeletar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnDeletar.setBounds(547, 241, 108, 31);
+		frame.getContentPane().add(btnDeletar);
+		
+		JButton btnAtualizar = new JButton("Atualizar");	
+		btnAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				atualizar();
+			}
+		});
+		btnAtualizar.setToolTipText("Atualiza dados de um cadastro por nome (preencha todos os campos)");
+		btnAtualizar.setBackground(new Color(0, 64, 128));
+		btnAtualizar.setForeground(new Color(255, 255, 255));
+		btnAtualizar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnAtualizar.setBounds(547, 199, 108, 31);
+		frame.getContentPane().add(btnAtualizar);
+		
+		JButton btnCarregar = new JButton("Carregar");
+		btnCarregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				carregar();
+			}
+		});
+		btnCarregar.setToolTipText("Preeenche todos os campos com dados de um produto");
+		btnCarregar.setForeground(Color.WHITE);
+		btnCarregar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnCarregar.setBackground(new Color(0, 64, 128));
+		btnCarregar.setBounds(547, 156, 108, 31);
+		frame.getContentPane().add(btnCarregar);
+		
+		JButton btnAjuda = new JButton("Ajuda");
+		btnAjuda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Ações dos Botões\n"
+						+ "Carregar - Preeenche todos os campos com dados de uma venda\n"
+						+ "Atualizar - Atualiza dados de um cadastro por nome do cliente e do produto(preencha todos os campos)\n"
+						+ "Deletar - Deleta um cadastro por nome do cliente e do produto(somente nomes necessários)\n"
+						+ "Cadastrar - Cadastra uma nova venda no banco\n"
+						+ "Limpar - Apaga todos os campos");
+			}
+		});
+		btnAjuda.setForeground(Color.WHITE);
+		btnAjuda.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 11));
+		btnAjuda.setBackground(new Color(0, 64, 128));
+		btnAjuda.setBounds(585, 727, 89, 23);
+		frame.getContentPane().add(btnAjuda);
+		
+		modelo = new DefaultTableModel(new String[] {
+				"Cliente", "Produto", "Quantidade", "Valor Unitário", "Desconto", "Forma Pagamento", "Valor Total"	
+			}, 0);
+			
+			tblResultados = new JTable(modelo);
+			tblResultados.setBounds(27, 564, 397, 174);
+			frame.getContentPane().add(tblResultados);
+			
+			JScrollPane scroll = new JScrollPane(tblResultados);
+			scroll.setBounds(57, 410, 416, 328); 
+			frame.getContentPane().add(scroll);
+			listar();
+	}
+	
+	public boolean salvar() {
+		if(!naoVazio() || !validar()) {
+			return false;
+		}
+		
+		boolean salvo = controller.salvar(textFieldCliente.getText(), textFieldProduto.getText(), Integer.parseInt(textFieldQntdProduto.getText()), 
+				Float.parseFloat(textFieldUnidade.getText()) , Float.parseFloat(textFieldDesconto.getText()), 
+				comboBoxPag.getSelectedItem().toString(), Float.parseFloat(textFieldTotal.getText()));
+		
+		if(!salvo) {
+			JOptionPane.showMessageDialog(null, "Erro, já existe um produto com esse nome e essa mídia");
+			return false;
+		}else {
+			JOptionPane.showMessageDialog(null, "O cadastro foi realizado com sucesso!");
+			limpar();
+			listar();
+			return true;
+		}
+	}
+	
+	public void limpar() {
+		textFieldCliente.setText("");
+		textFieldProduto.setText("");
+		textFieldQntdProduto.setText("");
+		textFieldUnidade.setText("");
+		textFieldDesconto.setText(""); 
+		comboBoxPag.setSelectedIndex(0);
+		textFieldTotal.setText("");
+	}
+	
+	public boolean deletar() {
+		String cliente = textFieldCliente.getText();
+		String produto = textFieldProduto.getText();
+		if(textFieldCliente.getText().isBlank() || textFieldProduto.getText().isBlank()) {
+			cliente = JOptionPane.showInputDialog("Digite o nome do Cliente que deseja deletar: ",null);
+			produto = JOptionPane.showInputDialog("Digite o nome do Produto que deseja deletar: ",null);
+		} 
+		
+		boolean deletado = controller.deletar(cliente,produto);
+		
+		if (!deletado) {
+			JOptionPane.showMessageDialog(null, "Venda não encontrada, por favor digite dados de uma Venda cadastrada ou válida");
+			return false;
+		} else {
+			JOptionPane.showMessageDialog(null, "O cadastro foi deletado com sucesso!");
+			limpar();
+			listar();
+			return true;
+		}
+	}
+	
+	public void listar() {
+		modelo.setRowCount(0);
+		List<Vendas> vendas = controller.listar();
+		
+		for (Vendas u : vendas) {
+			Object[] row = { u.getCliente(), u.getProduto(), u.getQntdProd(), u.getValorUni(), u.getDesconto(), u.getFormaPag(), u.getValorTotal()};
+			modelo.addRow(row);
+		}
+		tblResultados.setModel(modelo);
+	}
+	
+	private Vendas carregar() {
+		String cliente = JOptionPane.showInputDialog("Digite o nome do Cliente que deseja deletar: ",null);
+		String produto = JOptionPane.showInputDialog("Digite o nome do Produto que deseja deletar: ",null);
+		
+		Vendas vendas = controller.carregar(cliente, produto);
+		
+		
+		textFieldCliente.setText(vendas.getCliente());
+		textFieldProduto.setText(vendas.getProduto());
+		textFieldQntdProduto.setText(String.valueOf(vendas.getQntdProd()));
+		textFieldUnidade.setText(String.valueOf(vendas.getValorUni()));
+		textField
+		
+		return cliente;
+	}
+	public boolean atualizar() {	
+		if(textFieldCPF.getText().isBlank()) {
+			String cpf = JOptionPane.showInputDialog("Digite o CPF que atualizar: ",null);
+			textFieldCPF.setText(cpf);
+		}
+		
+		if(!naoVazio() || !validar()) {
+			return false;
+		}
+		
+		boolean atualizado = controller.atualizar(textFieldNome.getText(), textFieldCPF.getText(), textFieldEmail.getText(),
+					textFieldTelefone.getText(), textFieldEndereço.getText());
+			
+			if (!atualizado) {
+				JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado ou válido");
+				return false;
+			} else {
+				JOptionPane.showMessageDialog(null, "O cadastro foi atualizado com sucesso!");
+				limpar();
+				listar();
+				return true;
+			}		
+	}
+	
+	private void carregarComboPag(){
+		List<FormaPag> formaPag = controllerPag.listar();
+		
+		comboBoxPag.addItem("Selecione uma forma de pagamento");
+		for (FormaPag u : formaPag) {
+			comboBoxPag.addItem(u.getFormaPag());
+		}
+	}
+	
+	public boolean naoVazio() {
+		JTextField[] campos = { textFieldCliente, textFieldProduto, textFieldQntdProduto, textFieldUnidade, textFieldDesconto, textFieldTotal };
+		JComboBox[] combos = { comboBoxPag };
+		String[] nomesCampos = { "Cliente", "Produto", "Quantidade", "Valor Unitário", "Desconto", "Total" };
+		String[] nomesCombos = {"Pagamento"};
+		for (int i = 0; i < campos.length; i++) {
+			if (campos[i].getText().isBlank()) {
+				JOptionPane.showMessageDialog(null, "O campo " + nomesCampos[i] + " está vazio, por favor, preencha-o");
+				return false;
+			}
+		}
+		
+		for (int i = 0; i < combos.length; i++) {
+			if(combos[i].getSelectedItem().equals("Selecione uma forma de pagamento")) {
+				JOptionPane.showMessageDialog(null, "O campo " + nomesCombos[i] + " está vazio, por favor, preencha-o");
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean validar() {
+		JTextField[] campos = { textFieldCliente, textFieldProduto, textFieldQntdProduto, textFieldUnidade, textFieldDesconto, textFieldTotal };
+		
+		if (campos[0].getText().matches("\\d+")) {
+			JOptionPane.showMessageDialog(null, "Cliente inválido, por favor digite apenas letras");
+			return false;
+		} 
+		
+		if (!campos[2].getText().matches("\\d+")) {
+			JOptionPane.showMessageDialog(null, "Quantidade inválida, por favor digite apenas números");
+			return false;
+		} 
+		
+		if (!campos[3].getText().matches("\\d+")) {
+			JOptionPane.showMessageDialog(null, "Valor unitário inválido, por favor digite apenas números");
+			return false;
+		}
+
+		if(!campos[4].getText().matches("\\d+")) {
+			JOptionPane.showMessageDialog(null, "Desconto inválido, por favor digite apenas números");
+			return false;
+		}
+		
+		if(!campos[5].getText().matches("\\d+")) {
+			JOptionPane.showMessageDialog(null, "Valor Total inválido, por favor digite apenas números");
+			return false;
+		}
+		
+
+		return true;
+	}
+}

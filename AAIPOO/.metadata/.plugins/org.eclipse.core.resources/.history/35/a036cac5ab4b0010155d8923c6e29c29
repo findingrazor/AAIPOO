@@ -1,0 +1,106 @@
+package model;
+
+public class Vendas {
+	int codPedido;
+	int codProduto;
+	int codCliente;
+	int produto;
+	int qntdProd;
+	float valorUni;
+	float desconto;
+	float valorTotal;
+	
+	public Vendas(int codPedido, int codProduto, int codCliente, int produto, int qntdProd, float valorUni,
+			float desconto, float valorTotal) {
+		super();
+		this.codPedido = codPedido;
+		this.codProduto = codProduto;
+		this.codCliente = codCliente;
+		this.produto = produto;
+		this.qntdProd = qntdProd;
+		this.valorUni = valorUni;
+		this.desconto = desconto;
+		this.valorTotal = valorTotal;
+	}
+
+
+
+	public int getCodCliente() {
+		return codCliente;
+	}
+
+
+
+	public void setCodCliente(int codCliente) {
+		this.codCliente = codCliente;
+	}
+
+
+
+	public int getCodPedido() {
+		return codPedido;
+	}
+
+
+
+	public void setCodPedido(int codPedido) {
+		this.codPedido = codPedido;
+	}
+
+
+
+	public int getCodProduto() {
+		return codProduto;
+	}
+
+
+
+	public void setCodProduto(int codProduto) {
+		this.codProduto = codProduto;
+	}
+
+
+
+	public int getProduto() {
+		return produto;
+	}
+
+	public void setProduto(int produto) {
+		this.produto = produto;
+	}
+
+	public int getQntdProd() {
+		return qntdProd;
+	}
+
+	public void setQntdProd(int qntdProd) {
+		this.qntdProd = qntdProd;
+	}
+
+	public float getValorUni() {
+		return valorUni;
+	}
+
+	public void setValorUni(float valorUni) {
+		this.valorUni = valorUni;
+	}
+
+	public float getDesconto() {
+		return desconto;
+	}
+
+	public void setDesconto(float desconto) {
+		this.desconto = desconto;
+	}
+
+	public float getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(float valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
+	
+}
+	

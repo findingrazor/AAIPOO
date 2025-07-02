@@ -1,0 +1,157 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.JOptionPane;
+
+public final class VendasDAO {
+	public boolean salvar(Vendas vendas) {
+	    String sqlCliente = "SELECT CodCliente FROM Cliente WHERE Nome = ?";
+	    String sqlProduto = "SELECT CodProduto FROM Produto WHERE Nome = ?";
+	    String sqlPagamento = "SELECT CodPag FROM Pagamento WHERE Nome = ?";
+	    String inserirPedido = "INSERT INTO Pedido(CodCliente, CodPag) VALUES (?, ?)";
+	    String inserirDetalhes = "INSERT INTO Detalhes(CodProduto, qntdProd, ValorUni, Desconto, ValorTotal) VALUES ( ?, ?, ?, ?, ?)";
+
+	    Conexao.conectar();
+
+	    try (Connection conn = Conexao.conexao) {
+	        int codCliente = -1;
+	        int codProduto = -1;
+	        int codPagamento = -1;
+
+	        try (PreparedStatement stmtCliente = conn.prepareStatement(sqlCliente)) {
+	            stmtCliente.setString(1, vendas.getCliente());
+	            ResultSet rs = stmtCliente.executeQuery();
+	            if (rs.next()) {
+	                codCliente = rs.getInt("CodCliente");
+	            } else {
+	                JOptionPane.showMessageDialog(null, "Cliente '" + vendas.getCliente() + "' não encontrado!");
+	                return false;
+	            }
+	        }
+
+	        try (PreparedStatement stmtProduto = conn.prepareStatement(sqlProduto)) {
+	            stmtProduto.setString(1, vendas.getProduto());
+	            ResultSet rs = stmtProduto.executeQuery();
+	            if (rs.next()) {
+	                codProduto = rs.getInt("CodProduto");
+	            } else {
+	                JOptionPane.showMessageDialog(null, "Produto '" + vendas.getProduto() + "' não encontrado!");
+	                return false;
+	            }
+	        }
+
+	        try (PreparedStatement stmtPag = conn.prepareStatement(sqlPagamento)) {
+	            stmtPag.setString(1, vendas.getFormaPag()); 
+	            ResultSet rs = stmtPag.executeQuery();
+	            if (rs.next()) {
+	                codPagamento = rs.getInt("CodPag");
+	            } else {
+	                JOptionPane.showMessageDialog(null, "Forma de pagamento '" + vendas.getFormaPag() + "' não encontrada!");
+	                return false;
+	            }
+	        }
+
+	        try (PreparedStatement stmtPedido = conn.prepareStatement(inserirPedido, Statement.RETURN_GENERATED_KEYS)) {
+	            stmtPedido.setInt(1, codCliente);
+	            stmtPedido.setInt(2, codPagamento);
+	            stmtPedido.executeUpdate();
+	        }
+
+	        try (PreparedStatement stmtDetalhes = conn.prepareStatement(inserirDetalhes)) {
+	            stmtDetalhes.setInt(1, codProduto);
+	            stmtDetalhes.setInt(2, vendas.getQntdProd());
+	            stmtDetalhes.setFloat(3, vendas.getValorUni());
+	            stmtDetalhes.setFloat(4, vendas.getDesconto());
+	            stmtDetalhes.setFloat(5, vendas.getValorTotal());
+	            stmtDetalhes.executeUpdate();
+	        }
+	        return true;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Erro ao salvar venda!");
+	    } finally {
+	        Conexao.desconectar();
+	    }
+
+	    return false;
+	}
+	
+	public boolean deletar(String cliente, String produto) {
+	    String sqlCliente = "SELECT CodCliente FROM Cliente WHERE Nome = ?";
+	    String sqlProduto = "SELECT CodProduto FROM Produto WHERE Nome = ?";
+	    String sqlCodPedido = "SELECT CodPedido FROM Detalhes WHERE CodCliente = ? AND CodProduto = ?";
+	    String sqlDetalhe = "DELETE FROM Detalhes WHERE CodCliente = ? AND CodProduto = ?";
+	    String sqlPedido = "DELETE FROM Pedidos WHERE CodPedido = ?";
+
+	    Conexao.conectar();
+
+	    try (Connection conn = Conexao.conexao) {
+	        int codCliente = -1;
+	        int codProduto = -1;
+	        int codPedido = -1;
+
+	        try (PreparedStatement stmt = conn.prepareStatement(sqlCliente)) {
+	            stmt.setString(1, cliente);
+	            ResultSet rs = stmt.executeQuery();
+	            if (rs.next()) {
+	                codCliente = rs.getInt("CodCliente");
+	            } else {
+	                JOptionPane.showMessageDialog(null, "Cliente não encontrado!");
+	                return false;
+	            }
+	        }
+
+	        try (PreparedStatement stmt = conn.prepareStatement(sqlProduto)) {
+	            stmt.setString(1, produto);
+	            ResultSet rs = stmt.executeQuery();
+	            if (rs.next()) {
+	                codProduto = rs.getInt("CodProduto");
+	            } else {
+	                JOptionPane.showMessageDialog(null, "Produto não encontrado!");
+	                return false;
+	            }
+	        }
+
+	        try (PreparedStatement stmt = conn.prepareStatement(sqlCodPedido)) {
+	            stmt.setInt(1, codCliente);
+	            stmt.setInt(2, codProduto);
+	            ResultSet rs = stmt.executeQuery();
+	            if (rs.next()) {
+	                codPedido = rs.getInt("CodPedido");
+	            } else {
+	                JOptionPane.showMessageDialog(null, "Pedido não encontrado!");
+	                return false;
+	            }
+	        }
+
+	        try (PreparedStatement stmt = conn.prepareStatement(sqlDetalhe)) {
+	            stmt.setInt(1, codCliente);
+	            stmt.setInt(2, codProduto);
+	            stmt.executeUpdate();
+	        }
+
+	        try (PreparedStatement stmt = conn.prepareStatement(sqlPedido)) {
+	            stmt.setInt(1, codPedido);
+	            stmt.executeUpdate();
+	        }
+
+	        Conexao.desconectar();
+	        return true;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Erro ao deletar o pedido!");
+	    }
+
+	    return false;
+	}
+
+
+}
+

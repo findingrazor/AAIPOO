@@ -1,0 +1,106 @@
+package view;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
+import javax.swing.JLabel;
+import javax.swing.JEditorPane;
+import java.awt.Dimension;
+
+public class TelaMenu {
+
+	public JFrame frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		FlatLightLaf.setup();
+		try {
+		    UIManager.setLookAndFeel( new FlatLightLaf() );
+		} catch( Exception ex ) {
+		    System.err.println( "Failed to initialize LaF" );
+		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					TelaMenu window = new TelaMenu();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public TelaMenu() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(63, 75, 85));
+		frame.setBounds(0, 0, 700, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JButton btnClientes = new JButton("Clientes");
+		btnClientes.addActionListener(e -> {
+			TelaCliente telacliente = new TelaCliente();
+			telacliente.frame.setVisible(true);
+			frame.dispose();
+		});
+		btnClientes.setToolTipText("Gerenciamento de Clientes");
+		btnClientes.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnClientes.setBounds(278, 191, 128, 51);
+		frame.getContentPane().add(btnClientes);
+		
+		JButton btnProdutos = new JButton("Produtos");
+		btnProdutos.setToolTipText("Gerenciamento de Produtos");
+		btnProdutos.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnProdutos.setBounds(278, 271, 128, 51);
+		frame.getContentPane().add(btnProdutos);
+		
+		JButton btnVendas = new JButton("Vendas");
+		btnVendas.setToolTipText("Gerenciamento de Vendas");
+		btnVendas.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnVendas.setBounds(278, 351, 128, 51);
+		frame.getContentPane().add(btnVendas);
+		
+		JButton btnRelatorios = new JButton("Relatórios");
+		btnRelatorios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaRelatorio telarelatorio = new TelaRelatorio();
+				telarelatorio.frame.setVisible(true);
+				frame.dispose();
+			}
+		});
+		btnRelatorios.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnRelatorios.setBounds(278, 431, 128, 51);
+		frame.getContentPane().add(btnRelatorios);
+		
+		JButton btnSair = new JButton("Sair");
+		btnSair.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnSair.addActionListener(e -> System.exit(0)); 
+		btnSair.setBounds(278, 511, 128, 51);
+		frame.getContentPane().add(btnSair);
+		
+		
+	}
+}

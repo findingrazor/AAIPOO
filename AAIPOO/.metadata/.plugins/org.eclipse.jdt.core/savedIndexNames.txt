@@ -1,0 +1,6 @@
+INDEX VERSION 1.134+C:\Users\clari\Downloads\AAIPOO-main\AAIPOO-main\AAIPOO\.metadata\.plugins\org.eclipse.jdt.core
+412936325.index
+1865797976.index
+3282879041.index
+546217658.index
+312846696.index

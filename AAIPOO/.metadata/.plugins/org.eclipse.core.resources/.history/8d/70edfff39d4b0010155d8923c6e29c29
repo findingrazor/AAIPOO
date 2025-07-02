@@ -1,0 +1,36 @@
+package controller;
+
+import java.util.List;
+
+import javax.swing.JComboBox;
+
+import model.Produto;
+import model.ProdutoDAO;
+
+public class ProdutoController {
+	ProdutoDAO dao = new ProdutoDAO();
+	
+	public boolean salvar(String produto, String midia, String genero, int estoque, float preço) {
+		Produto Produto = new Produto(produto, midia, genero, estoque, preço);
+		return dao.salvar(Produto);
+	}
+	
+	public boolean deletar(String nome, String midia) {
+		return dao.deleter(nome,midia);
+	}
+	
+	public boolean atualizar(String nome, String midia, String genero, int estoque, float preço) {
+		Produto produto = new Produto (nome, midia,  genero, estoque, preço);
+		return dao.atualizar(produto);
+	}
+	
+	
+	public  List<Produto> listar(){
+		return dao.listar();
+	}
+	
+	public Produto carregar(String nome, String midia) {
+		return dao.carregar(nome, midia);
+	}
+
+}

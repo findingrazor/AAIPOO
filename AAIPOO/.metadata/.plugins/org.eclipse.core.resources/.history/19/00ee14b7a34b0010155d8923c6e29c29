@@ -1,0 +1,58 @@
+package view;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+public abstract class TelaBase {
+
+    public JFrame frame;
+
+    public TelaBase() {
+        configurarFrame();
+        voltar();
+        logo();
+    }
+
+    private void configurarFrame() {
+    	frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(255, 255, 255));
+		frame.setBounds(0, 0, 700, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
+		frame.setTitle("SpinStore");
+    }
+    
+    private void voltar() {
+    	JButton btnVoltar = new JButton("<");
+		btnVoltar.setForeground(new Color(255, 255, 255));
+		btnVoltar.setBackground(new Color(0, 64, 128));
+		btnVoltar.setFont(new Font("Malgun Gothic Semilight", Font.BOLD, 16));
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaMenu telamenu = new TelaMenu();
+				telamenu.frame.setVisible(true);
+				frame.dispose();
+			}
+		});
+		btnVoltar.setBounds(619, 11, 55, 31);
+		frame.getContentPane().add(btnVoltar);
+    }
+    
+    private void logo() {
+    	JLabel lblLogo = new JLabel();
+		lblLogo.setBounds(10, 11, 100, 100);
+		
+		ImageIcon logo = new ImageIcon(getClass().getResource("/images/logo_nome.png"));
+		logo.setImage(logo.getImage().getScaledInstance(lblLogo.getWidth(), lblLogo.getHeight(), 1));
+        lblLogo.setIcon(logo);
+		frame.getContentPane().add(lblLogo);
+    }
+}

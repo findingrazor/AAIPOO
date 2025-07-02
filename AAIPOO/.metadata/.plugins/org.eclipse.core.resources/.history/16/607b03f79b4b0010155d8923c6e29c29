@@ -1,0 +1,398 @@
+package view;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
+import controller.ClienteController;
+import model.Cliente;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import javax.swing.JEditorPane;
+import java.awt.Canvas;
+import java.awt.Panel;
+import javax.swing.JTable;
+
+public abstract class TelaCliente {
+
+	public JFrame frame;
+	private JTextField textFieldNome;
+	private JTextField textFieldCPF;
+	private JTextField textFieldEmail;
+	private JTextField textFieldEndereço;
+	private JTextField textFieldTelefone;
+	
+	private DefaultTableModel modelo = new DefaultTableModel();
+	private ClienteController controller = new ClienteController();
+	private JTable tblResultados;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		FlatLightLaf.setup();
+		try {
+		    UIManager.setLookAndFeel( new FlatLightLaf() );
+		} catch( Exception ex ) {
+		    System.err.println( "Failed to initialize LaF" );
+		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					TelaCliente window = new TelaCliente();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public TelaCliente() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(255, 255, 255));
+		frame.setBounds(0, 0, 700, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
+
+		JLabel lblTitulo = new JLabel("Gerenciamento Clientes");
+		lblTitulo.setForeground(new Color(0, 0, 0));
+		lblTitulo.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 32));
+		lblTitulo.setBounds(171, 36, 339, 40);
+		frame.getContentPane().add(lblTitulo);
+
+		JLabel lblNome = new JLabel("Nome");
+		lblNome.setForeground(new Color(0, 0, 0));
+		lblNome.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblNome.setBounds(27, 143, 62, 31);
+		frame.getContentPane().add(lblNome);
+
+		JLabel lblCPF = new JLabel("CPF");
+		lblCPF.setForeground(new Color(0, 0, 0));
+		lblCPF.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblCPF.setBounds(27, 229, 41, 31);
+		frame.getContentPane().add(lblCPF);
+
+		JLabel lblEmail = new JLabel("Email");
+		lblEmail.setForeground(new Color(0, 0, 0));
+		lblEmail.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblEmail.setBounds(27, 313, 62, 31);
+		frame.getContentPane().add(lblEmail);
+
+		JLabel lblTelefone = new JLabel("Telefone");
+		lblTelefone.setForeground(new Color(0, 0, 0));
+		lblTelefone.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblTelefone.setBounds(27, 398, 92, 31);
+		frame.getContentPane().add(lblTelefone);
+
+		JLabel lblEndereo = new JLabel("Endereço");
+		lblEndereo.setForeground(new Color(0, 0, 0));
+		lblEndereo.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 20));
+		lblEndereo.setBounds(27, 480, 101, 31);
+		frame.getContentPane().add(lblEndereo);
+
+		textFieldNome = new JTextField();
+		textFieldNome.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		textFieldNome.setBounds(27, 172, 397, 31);
+		frame.getContentPane().add(textFieldNome);
+		textFieldNome.setColumns(10);
+
+		textFieldCPF = new JTextField();
+		textFieldCPF.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		textFieldCPF.setColumns(10);
+		textFieldCPF.setBounds(27, 256, 397, 31);
+		frame.getContentPane().add(textFieldCPF);
+
+		textFieldEmail = new JTextField();
+		textFieldEmail.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		textFieldEmail.setColumns(10);
+		textFieldEmail.setBounds(27, 340, 397, 31);
+		frame.getContentPane().add(textFieldEmail);
+
+		textFieldEndereço = new JTextField();
+		textFieldEndereço.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		textFieldEndereço.setColumns(10);
+		textFieldEndereço.setBounds(27, 508, 397, 31);
+		frame.getContentPane().add(textFieldEndereço);
+
+		textFieldTelefone = new JTextField();
+		textFieldTelefone.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		textFieldTelefone.setColumns(10);
+		textFieldTelefone.setBounds(27, 424, 397, 31);
+		frame.getContentPane().add(textFieldTelefone);
+
+		JButton btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.setBackground(new Color(0, 64, 128));
+		btnCadastrar.setToolTipText("Cadastra um novo cliente no banco");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (naoVazio() == true && validar() == true) {
+					salvar();
+				}
+			}
+		});
+		btnCadastrar.setForeground(new Color(255, 255, 255));
+		btnCadastrar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnCadastrar.setBounds(525, 324, 108, 31);
+		frame.getContentPane().add(btnCadastrar);
+
+		JButton btnLimpar = new JButton("Limpar");
+		btnLimpar.setBackground(new Color(0, 64, 128));
+		btnLimpar.setToolTipText("Apaga todos os campos");
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				limpar();
+			}
+		});
+		btnLimpar.setForeground(new Color(255, 255, 255));
+		btnLimpar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnLimpar.setBounds(525, 375, 108, 31);
+		frame.getContentPane().add(btnLimpar);
+
+		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.setBackground(new Color(0, 64, 128));
+		btnDeletar.setToolTipText("Deleta um cadastro por CPF (somente CPF necessário)");
+		btnDeletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(naoVazio() == true && validar() == true) {
+					deletar();
+				}
+			}
+		});
+		btnDeletar.setForeground(new Color(255, 255, 255));
+		btnDeletar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnDeletar.setBounds(525, 273, 108, 31);
+		frame.getContentPane().add(btnDeletar);
+
+		JButton btnAtualizar = new JButton("Atualizar");
+		btnAtualizar.setBackground(new Color(0, 64, 128));
+		btnAtualizar.setToolTipText("Atualiza dados de um cadastro por CPF (preencha todos os campos)");
+		btnAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(naoVazio() == true && validar() == true) {
+					atualizar();
+				}
+			}
+		});
+		btnAtualizar.setForeground(new Color(255, 255, 255));
+		btnAtualizar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnAtualizar.setBounds(525, 222, 108, 31);
+		frame.getContentPane().add(btnAtualizar);
+		
+		JButton btnCarregar = new JButton("Carregar");
+		btnCarregar.setBackground(new Color(0, 64, 128));
+		btnCarregar.setToolTipText("Preeenche todos os campos com dados de um CPF");
+		btnCarregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				carregar();
+			}
+		});
+		btnCarregar.setForeground(new Color(255, 255, 255));
+		btnCarregar.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 18));
+		btnCarregar.setBounds(525, 171, 108, 31);
+		frame.getContentPane().add(btnCarregar);
+		
+		JButton btnAjuda = new JButton("Ajuda");
+		btnAjuda.setForeground(new Color(255, 255, 255));
+		btnAjuda.setFont(new Font("Malgun Gothic Semilight", Font.PLAIN, 11));
+		btnAjuda.setBackground(new Color(0, 64, 128));
+		btnAjuda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Ações dos Botões\n"
+						+ "Carregar - Preeenche todos os campos com dados de um CPF\n"
+						+ "Atualizar - Atualiza dados de um cadastro por CPF (preencha todos os campos)\n"
+						+ "Deletar - Deleta um cadastro por CPF (somente CPF necessário)\n"
+						+ "Cadastrar - Cadastra um novo cliente no banco\n"
+						+ "Limpar - Apaga todos os campos");
+			}
+		});
+		btnAjuda.setBounds(585, 727, 89, 23);
+		frame.getContentPane().add(btnAjuda);
+		
+		JButton btnVoltar = new JButton("<");
+		btnVoltar.setForeground(new Color(255, 255, 255));
+		btnVoltar.setBackground(new Color(0, 64, 128));
+		btnVoltar.setFont(new Font("Malgun Gothic Semilight", Font.BOLD, 16));
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaMenu telamenu = new TelaMenu();
+				telamenu.frame.setVisible(true);
+				frame.dispose();
+			}
+		});
+		btnVoltar.setBounds(619, 11, 55, 31);
+		frame.getContentPane().add(btnVoltar);
+		
+		JLabel lblLogo = new JLabel();
+		lblLogo.setBounds(10, 11, 100, 100);
+		
+		ImageIcon logo = new ImageIcon(getClass().getResource("/images/logo_nome.png"));
+		logo.setImage(logo.getImage().getScaledInstance(lblLogo.getWidth(), lblLogo.getHeight(), 1));
+        lblLogo.setIcon(logo);
+		frame.getContentPane().add(lblLogo);
+		
+		modelo = new DefaultTableModel(new String[] {
+			"Nome", "CPF", "Endereço", "Telefone", "Email"	
+		}, 0);
+		
+		tblResultados = new JTable(modelo);
+		tblResultados.setBounds(27, 564, 397, 174);
+		frame.getContentPane().add(tblResultados);
+		
+		JScrollPane scroll = new JScrollPane(tblResultados);
+		scroll.setBounds(27, 564, 397, 174); 
+		frame.getContentPane().add(scroll);
+		listar();
+
+	}
+
+	private boolean salvar() {
+		boolean salvo = controller.salvar(textFieldNome.getText(), textFieldCPF.getText(), textFieldEmail.getText(),
+				textFieldTelefone.getText(), textFieldEndereço.getText());
+		if(!salvo) {
+			JOptionPane.showMessageDialog(null, "Erro, já existe um cadastro com este CPF!");
+			return false;
+		}else {
+			JOptionPane.showMessageDialog(null, "O cadastro foi feito com sucesso!");
+			limpar();
+			listar();
+			return true;
+		}
+	}
+
+	private void limpar() {
+		textFieldNome.setText("");
+		textFieldCPF.setText("");
+		textFieldEmail.setText("");
+		textFieldEndereço.setText("");
+		textFieldTelefone.setText("");
+	}
+
+	private boolean deletar() {
+		String cpf = textFieldCPF.getText();
+		if(textFieldCPF.getText().isBlank()) {
+			cpf = JOptionPane.showInputDialog("Digite o CPF que deseja deletar: ",null);
+		} 
+		
+		boolean deletado = controller.deletar(cpf);
+
+		if (!deletado) {
+			JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado ou válido");
+			return false;
+		} else {
+			JOptionPane.showMessageDialog(null, "O cadastro foi deletado com sucesso!");
+			limpar();
+			listar();
+			return true;
+		}
+	}
+	
+	private void listar() {
+		modelo.setRowCount(0);
+		List<Cliente> cliente = controller.listar();
+		
+		for (Cliente u : cliente) {
+			Object[] row = { u.getNome(), u.getCpf(), u.getEndereco(), u.getTelefone(), u.getEmail()};
+			modelo.addRow(row);
+		}
+		tblResultados.setModel(modelo);
+	}
+	
+	private Cliente carregar() {
+		String cpf = JOptionPane.showInputDialog("Digite o CPF que deseja carregar: ",null);
+		Cliente cliente = controller.carregar(cpf);
+		
+		
+		textFieldNome.setText(cliente.getNome());
+		textFieldCPF.setText(cliente.getCpf());
+		textFieldEmail.setText(cliente.getEmail());
+		textFieldEndereço.setText(cliente.getEndereco());
+		textFieldTelefone.setText(cliente.getTelefone());
+		
+		return cliente;
+	}
+	private boolean atualizar() {
+		if(textFieldCPF.getText().isBlank()) {
+			String cpf = JOptionPane.showInputDialog("Digite o CPF que atualizar: ",null);
+			textFieldCPF.setText(cpf);
+		}
+		
+		boolean atualizado = controller.atualizar(textFieldNome.getText(), textFieldCPF.getText(), textFieldEmail.getText(),
+					textFieldTelefone.getText(), textFieldEndereço.getText());
+			
+			if (!atualizado) {
+				JOptionPane.showMessageDialog(null, "CPF não encontrado, por favor digite um CPF cadastrado ou válido");
+				return false;
+			} else {
+				JOptionPane.showMessageDialog(null, "O cadastro foi atualizado com sucesso!");
+				limpar();
+				listar();
+				return true;
+			}		
+	}
+
+	private boolean naoVazio() {
+		JTextField[] campos = { textFieldNome, textFieldCPF, textFieldEndereço, textFieldTelefone };
+		String[] nomesCampos = { "Nome", "CPF", "Endereço", "Telefone" };
+		for (int i = 0; i < campos.length; i++) {
+			if (campos[i].getText().isBlank()) {
+				JOptionPane.showMessageDialog(null, "O campo " + nomesCampos[i] + " está vazio, por favor, preencha-o");
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean validar() {
+		JTextField[] campos = { textFieldNome, textFieldCPF, textFieldEmail, textFieldEndereço, textFieldTelefone };
+
+		if (!campos[1].getText().matches("\\d+")) {
+			JOptionPane.showMessageDialog(null, "CPF inválido, por favor digite apenas números");
+			return false;
+		} else if (campos[1].getText().length() != 11) {
+			JOptionPane.showMessageDialog(null, "CPF inválido, por favor digite um número válido (11 caracteres)");
+			return false;
+		}
+
+		if ((!campos[2].getText().contains("@") || !campos[2].getText().contains(".com")) && !campos[2].getText().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Email inválido, por favor digite um email com pelo menos @ e .com");
+			return false;
+		}
+
+		if (!campos[4].getText().matches("\\d+")) {
+			JOptionPane.showMessageDialog(null, "Telefone inválido, por favor digite apenas números");
+			return false;
+		} else if (campos[4].getText().length() != 11) {
+			JOptionPane.showMessageDialog(null, "Telefone inválido, por favor digite um número válido (11 caracteres)");
+			return false;
+		}
+
+		return true;
+	}
+}

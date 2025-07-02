@@ -1,0 +1,11 @@
+package view;
+
+public interface MetodosObrigatorios {
+	public boolean salvar();
+    public boolean atualizar();
+    public boolean deletar();
+    public boolean validar();
+    public boolean naoVazio();
+    public void limpar();
+    public void listar();
+}
