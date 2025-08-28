@@ -15,5 +15,6 @@
 </h2>
 <h4>
   Começando pela view como dito antes nela há 4 telas: Menu, Gerenciamento de Clientes, Vendas, Produtos e Relatórios. A tela de menu simplesmente redireciona para as outras telas e fecha completamente o sistema. A 
-  tela de clientes possui os botões de Carregar, que 
+  tela de clientes, produtos e vendas possuem os botões de Carregar, que preenchem as informações de um dos 3 elementos nos inputs e nas combo boxes, os de Deletar, que deletam um cadastro por ID ou CPF no caso do cliente do banco,
+  os de Cadastrar, que cria novos cadastros no banco, o de Atualizar que muda informações de um cadastro no banco por meio de ID ou CPF, a partir das caixas de input e combo boxes e o botão de limpar que apaga todos os campos da tela.
 </h4>
