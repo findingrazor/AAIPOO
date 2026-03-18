@@ -32,9 +32,4 @@
   Por fim na Model temos as classes que representam as entidades que formam os objetos do projeto, assim como na controller, há uma classe para cada tabela do banco basicamente. Aqui há também estão as DAOs, que são as classes com funções para transmitir os dados da 
   tela para o banco de dados. Esses arquivos utilizam o pacote SQL para escrever as querys e realizar os comandos de Cadastro, Exclusão, Atualização e Relátorio em tela
 </h4>
-<h2>
-  Imagens do Sistema
-</h2>
-<h4>
-  Aqui estão as imagens da tela final. Uma library externa foi utilizada para melhorar o design
-</h4>
+
