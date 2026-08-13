@@ -1,8 +1,0 @@
-package controller;
-
-public class RelatorioController {
-	RelatorioDAO dao = new RelatorioDAO();
-	public List<Detalhes> todas(){
-		return 
-	}
-}

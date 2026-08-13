@@ -1,9 +1,0 @@
-package model;
-
-public interface MetodosObrigatorios {
-	public boolean salvar();
-    public boolean atualizar();
-    public boolean deletar();
-    public boolean validar();
-    public void listar();
-}

@@ -1,6 +1,0 @@
-package model;
-
-public class FormaPag {
-	private int codPag;
-	private String formaPag;
-}
